@@ -1,5 +1,12 @@
+# Region oben und unten: je 1/4 der Höhe
+# Zeigefinger in Region oben oder unten: oben/unten
+# Zeigefinger in Mitte: unterscheidung zwischen rechts und links
+# toDo: In Region Mitte Faust für "zu mir: vor" und offene Hand für "von mir weg: zurück"
+
 import cv2
 import mediapipe as mp
+from djitellopy import Tello
+from time import sleep
 
 # Initialisiere Mediapipe
 mp_hands = mp.solutions.hands
@@ -8,6 +15,16 @@ hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
 def main():
+
+    drone = Tello()
+
+    print("Drone initialized.")
+    drone.connect()
+    print("Drone connected.")
+    drone.streamoff()
+    drone.streamon()
+    # drone.streamoff()
+
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
     _, frame = cap.read()  # Lese ein Frame von der Kamera
     height, width, _ = frame.shape
@@ -15,6 +32,8 @@ def main():
     roi_bottom = int(3 * height / 4)
     roi_middle_left = int(width / 4)
     roi_middle_right = int(3 * width / 4)
+
+    # drone.takeoff()
 
     while True:
         ret, frame = cap.read()  # Lese ein Frame von der Kamera
@@ -39,8 +58,6 @@ def main():
                     print("Oben")
                 elif finger_y > roi_bottom:
                     print("Unten")
-                elif roi_middle_left < finger_x < roi_middle_right:
-                    print("Mitte")
                 else:
                     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
                     if index_finger_tip.x < thumb_tip.x:
@@ -50,8 +67,7 @@ def main():
                     else:
                         print("Hand ist nicht ausgerichtet")
 
-        cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
-        cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
+        # Zeichne die Regionen ein
         cv2.rectangle(
             frame,
             (roi_middle_left, roi_top),
@@ -59,6 +75,8 @@ def main():
             (0, 255, 0),
             2,
         )
+        cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
+        cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         if cv2.waitKey(1) & 0xFF == ord(
