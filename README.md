@@ -1,5 +1,4 @@
 # Usage
 
 zum reinen Testen der Gestenerkennung:
-`drone = initialize_drone()` auskommentieren und
-`drone_control(drone, x_direction, y_direction)` auskommentieren.
+bool `test_with_drone` = False setzen. Fürs testen mit Drohne: True setzen.
