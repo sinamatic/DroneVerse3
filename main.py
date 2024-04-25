@@ -20,7 +20,7 @@ def initialize_drone():
 
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
 def main():
-    # drone = initialize_drone()
+    drone = initialize_drone()
 
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
     _, frame = cap.read()  # Lese ein Frame von der Kamera
@@ -88,7 +88,7 @@ def main():
                         print("Hand ist nicht ausgerichtet")
 
                 # Drohnensteuerung
-                # drone_control(drone, x_direction, y_direction)
+                drone_control(drone, x_direction, y_direction)
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
