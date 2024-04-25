@@ -27,7 +27,7 @@ def main():
     drone_start_land = 0
 
     # testing boolean
-    test_with_drone = False
+    test_with_drone = True
 
     if test_with_drone:
         drone = initialize_drone()
@@ -107,12 +107,12 @@ def main():
             break
 
         # drone start
-        elif key & 0xFF == ord("s"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
+        if key & 0xFF == ord("s"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
             drone_start_land = 1
             print("s: Drone start \t")
 
         # drone land
-        elif key & 0xFF == ord("l"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
+        if key & 0xFF == ord("l"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
             drone_start_land = -1
             print("l: Drone land \t")
 
@@ -136,7 +136,7 @@ def drone_control(drone, drone_x_direction, drone_y_direction, drone_start_land)
     elif drone_start_land < 0:
         drone.land()
         print("Landing … ")
-    elif drone_start_land > 1:
+    elif drone_start_land > 0:
         drone.takeoff()
         print("Takeoff …")
 
