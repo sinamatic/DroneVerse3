@@ -1,10 +1,13 @@
-import modul1
-import modul2
+import cv2
+import mediapipe as mp
+
+import gesturedetection_mp_roi
+import dronecontrol
 
 # Aufruf von Funktionen aus Modul 1
-modul1.beispielfunktion1()
-modul1.beispielfunktion2()
+gesturedetection_mp_roi.beispielfunktion1()
+gesturedetection_mp_roi.beispielfunktion2()
 
 # Aufruf von Funktionen aus Modul 2
-modul2.beispielfunktion3()
-modul2.beispielfunktion4()
+dronecontrol.beispielfunktion3()
+dronecontrol.beispielfunktion4()
