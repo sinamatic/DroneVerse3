@@ -27,7 +27,7 @@ def main():
     drone_start_land = 0
 
     # testing boolean
-    test_with_drone = True
+    test_with_drone = False
 
     if test_with_drone:
         drone = initialize_drone()
