@@ -110,6 +110,8 @@ def main():
         if key & 0xFF == ord("s"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
             drone_start_land = 1
             print("s: Drone start \t")
+            drone.takeoff()
+            print("drone takeoff …")
 
         # drone land
         if key & 0xFF == ord("l"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
@@ -137,7 +139,7 @@ def drone_control(drone, drone_x_direction, drone_y_direction, drone_start_land)
         drone.land()
         print("Landing … ")
     elif drone_start_land > 0:
-        drone.takeoff()
+        # drone.takeoff()
         print("Takeoff …")
 
 
