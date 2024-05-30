@@ -1,8 +1,22 @@
-def beispielfunktion3():
-    """Beispielfunktion 3 aus Modul 2 gibt eine Meldung aus."""
-    print("Dies ist die Beispielfunktion 3 aus Modul 2.")
+def drone_up():
+    print("Drone goes up")
 
 
-def beispielfunktion4():
-    """Beispielfunktion 4 aus Modul 2 gibt eine Meldung aus."""
-    print("Dies ist die Beispielfunktion 4 aus Modul 2.")
+def drone_down():
+    print("Drone goes down")
+
+
+def drone_left():
+    print("Drone goes left")
+
+
+def drone_right():
+    print("Drone goes right")
+
+
+def drone_forward():
+    print("Drone goes forward")
+
+
+def drone_backward():
+    print("Drone goes backward")

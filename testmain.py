@@ -4,13 +4,6 @@ import mediapipe as mp
 import gesturedetection_mp_roi
 import dronecontrol
 
-# Aufruf von Funktionen aus Modul 1
-gesturedetection_mp_roi.beispielfunktion1()
-gesturedetection_mp_roi.beispielfunktion2()
-
-# Aufruf von Funktionen aus Modul 2
-dronecontrol.beispielfunktion3()
-dronecontrol.beispielfunktion4()
 
 # Initialisiere Mediapipe einmalig
 mp_hands = mp.solutions.hands
@@ -23,37 +16,55 @@ hands = mp_hands.Hands(
 
 
 def main():
-    cap = cv2.VideoCapture(0)
-    _, frame = cap.read()  # Camera initial setup
-    gesture_direction = -1
-    # gesturedetection_mp_roi.draw_rois(frame)
+    webcam = cv2.VideoCapture(0)
 
     while True:
         # Video Setup
-        ret, frame = cap.read()  # Camera Update
-        if not ret:
+        success, image = webcam.read()  # Camera Update
+        if not success:
             print("Fehler beim Abrufen des Bildes von der Kamera")
             break
-        frame_flipped = cv2.flip(frame, 1)  # Horizontal spiegeln
+        image_flipped = cv2.flip(image, 1)  # Horizontal spiegeln
 
         # Gesture Detection
-        gesturedetection_mp_roi.start_roibased_gesture_detection(
-            frame_flipped, gesture_direction, hands, mp_hands
+        gesture_directions = [
+            "up",
+            "down",
+            "left",
+            "right",
+            "forward",
+            "backward",
+            "none",
+        ]
+        detected_gesture = gesturedetection_mp_roi.start_roibased_gesture_detection(
+            image_flipped, gesture_directions, hands, mp_hands
         )
 
         # Drone Control
+        if detected_gesture == "up":
+            dronecontrol.drone_up()
+        elif detected_gesture == "down":
+            dronecontrol.drone_down()
+        elif detected_gesture == "left":
+            dronecontrol.drone_left()
+        elif detected_gesture == "right":
+            dronecontrol.drone_right()
+        elif detected_gesture == "forward":
+            dronecontrol.drone_forward()
+        elif detected_gesture == "backward":
+            dronecontrol.drone_backward()
 
         # show updated video
-        # cv2.imshow("Frame", frame)
+        # cv2.imshow("image", image)
 
         # Quit program
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
         if key & 0xFF == ord("q"):  # Beende die Schleife, wenn 'q' gedrückt wird
             break
 
-        cv2.imshow("Frame", frame_flipped)
+        cv2.imshow("image", image_flipped)
 
-    cap.release()  # Gib die Ressourcen frei
+    webcam.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()
 
 
