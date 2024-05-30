@@ -12,10 +12,16 @@ gesturedetection_mp_roi.beispielfunktion2()
 dronecontrol.beispielfunktion3()
 dronecontrol.beispielfunktion4()
 
+# Initialisiere Mediapipe einmalig
+mp_hands = mp.solutions.hands
+hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
+
 
 def main():
     cap = cv2.VideoCapture(0)
     _, frame = cap.read()  # Camera initial setup
+
+    # gesturedetection_mp_roi.draw_rois(frame)
 
     while True:
         # Video Setup
@@ -23,21 +29,22 @@ def main():
         if not ret:
             print("Fehler beim Abrufen des Bildes von der Kamera")
             break
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.flip(frame, 1)  # Horizontal spiegeln
 
         # Gesture Detection
-        gesturedetection_mp_roi.start_gesture_detection(frame_rgb, frame)
+        gesturedetection_mp_roi.start_roibased_gesture_detection(frame, hands, mp_hands)
 
         # Drone Control
 
         # show updated video
-        cv2.imshow("Frame", frame)
+        # cv2.imshow("Frame", frame)
 
         # Quit program
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
         if key & 0xFF == ord("q"):  # Beende die Schleife, wenn 'q' gedrückt wird
             break
+
+        cv2.imshow("Frame", frame)
 
     cap.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()

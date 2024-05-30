@@ -15,16 +15,8 @@ def beispielfunktion2():
 ###
 
 
-def start_gesture_detection(frame, frame_rgb):
-
-    # Define Rois
+def draw_rois(frame, roi_top, roi_bottom, roi_middle_left, roi_middle_right):
     height, width, _ = frame.shape
-    roi_top = int(height / 4)
-    roi_bottom = int(3 * height / 4)
-    roi_middle_left = int(width / 4)
-    roi_middle_right = int(3 * width / 4)
-
-    # Draw Rois
     cv2.rectangle(
         frame,
         (roi_middle_left, roi_top),
@@ -35,11 +27,19 @@ def start_gesture_detection(frame, frame_rgb):
     cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
     cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
 
-    # Initialisiere Mediapipe
-    mp_hands = mp.solutions.hands
-    hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
-    results = hands.process(frame_rgb)
+def start_roibased_gesture_detection(frame, hands, mp_hands):
+
+    # Define top and bottom Rois
+    height, width, _ = frame.shape
+    roi_top = int(height / 4)
+    roi_bottom = int(3 * height / 4)
+    roi_middle_left = int(width / 4)
+    roi_middle_right = int(3 * width / 4)
+
+    # cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
+
+    results = hands.process(frame)
 
     # Überprüfe, ob der Zeigefinger in der oberen, unteren oder mittleren Region liegt
     if results.multi_hand_landmarks:
