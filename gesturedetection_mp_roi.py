@@ -2,19 +2,6 @@ import cv2
 import mediapipe as mp
 
 
-def draw_rois(image_flipped, roi_top, roi_bottom, roi_middle_left, roi_middle_right):
-    height, width, _ = image_flipped.shape
-    cv2.rectangle(
-        image_flipped,
-        (roi_middle_left, roi_top),
-        (roi_middle_right, roi_bottom),
-        (0, 255, 0),
-        2,
-    )
-    cv2.rectangle(image_flipped, (0, 0), (width, roi_top), (255, 0, 0), 2)
-    cv2.rectangle(image_flipped, (0, roi_bottom), (width, height), (255, 0, 0), 2)
-
-
 def draw_hand_skeleton(image_flipped, results, mp_hands):
 
     if results.multi_hand_landmarks:
@@ -37,7 +24,9 @@ def start_roibased_gesture_detection(
     roi_middle_right = int(3 * width / 4)
 
     # Draw Rois -> gestenerkennung elend langsam wenn aktiviert
-    # draw_rois(image_flipped, roi_top, roi_bottom, roi_middle_left, roi_middle_right)
+    draw_rois(image_flipped, roi_top, roi_bottom, roi_middle_left, roi_middle_right)
+
+    # draw_hand_skeleton(image_flipped, results, mp_hands)
 
     results = hands.process(image_flipped)
 
@@ -78,3 +67,16 @@ def start_roibased_gesture_detection(
                         gesture_directions = "none"
 
     return gesture_directions
+
+
+def draw_rois(image_flipped, roi_top, roi_bottom, roi_middle_left, roi_middle_right):
+    height, width, _ = image_flipped.shape
+    cv2.rectangle(
+        image_flipped,
+        (roi_middle_left, roi_top),
+        (roi_middle_right, roi_bottom),
+        (0, 255, 0),
+        2,
+    )
+    cv2.rectangle(image_flipped, (0, 0), (width, roi_top), (255, 0, 0), 2)
+    cv2.rectangle(image_flipped, (0, roi_bottom), (width, height), (255, 0, 0), 2)
