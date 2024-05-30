@@ -37,6 +37,9 @@ def main():
             "none",
         ]
 
+        detected_keyinput = keyboarddetection.start_keybased_detection(
+            keyboard_directions
+        )
         # Quit program
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
         if key & 0xFF == ord("q"):  # Beende die Schleife, wenn 'q' gedrückt wird
