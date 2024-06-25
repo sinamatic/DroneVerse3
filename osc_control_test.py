@@ -2,35 +2,9 @@ import argparse
 from pythonosc import dispatcher
 from pythonosc import osc_server
 
-# Globale Variablen für die Mittelwertberechnung der Gyroskop-Werte
-buf_count = 0
-buf_gyro = 0
-
-
-def handle_osc_message(address, *args):
-    global buf_count, buf_gyro
-
-    if len(args) > 0:
-        try:
-            gyro_value = float(
-                args[0]
-            )  # Annahme: Die X-Gyroskop-Werte sind das erste Argument
-
-            # Zählt 10 Gyroskop-Werte zusammen
-            if buf_count < 10:
-                buf_gyro += gyro_value
-                buf_count += 1
-            else:
-                gyro_value_mean = buf_gyro / 10  # Division durch 10
-                print(f"Gemittelter X-Gyroskop-Wert: {gyro_value_mean}")
-                buf_gyro = 0
-                buf_count = 0
-
-        except ValueError:
-            print(f"Ungültiger Wert empfangen: {args[0]}")
-
 
 def receive_osc_data(address, *args):
+    print(f"Empfangene Nachricht: {address} {args}")
     if len(args) > 0:
         try:
             gyro_value = float(args[0])
@@ -56,7 +30,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.set_default_handler(receive_osc_data)
+    # dispatcher.set_default_handler(receive_osc_data)
+    dispatcher.map("/data/motion/gyroscope/x", receive_osc_data)
 
     server = osc_server.ThreadingOSCUDPServer((args.ip, args.port), dispatcher)
     print(f"OSC-Server gestartet auf {args.ip}:{args.port}")
