@@ -2,16 +2,12 @@ import argparse
 from pythonosc import dispatcher
 from pythonosc import osc_server
 
+# Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
+GYRO_FACTOR = 10000.0  # Multiplikationsfaktor für bessere Lesbarkeit
 
-def receive_osc_data(address, *args):
-    print(f"Empfangene Nachricht: {address} {args}")
-    if len(args) > 0:
-        try:
-            gyro_value = float(args[0])
-            print(f"Empfangener Gyroskop-Wert: {gyro_value}")
 
-        except ValueError:
-            print(f"Ungültiger Wert empfangen: {args[0]}")
+def format_osc_value(value, factor):
+    return format(value * factor, ".4f")
 
 
 if __name__ == "__main__":
@@ -29,9 +25,37 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    # Initialisierung der Variablen für die Gyro-Werte
+    gyro_x = None
+    gyro_y = None
+    gyro_z = None
+
+    def print_gyro_values():
+        if gyro_x is not None and gyro_y is not None and gyro_z is not None:
+            formatted_x = format_osc_value(gyro_x, GYRO_FACTOR)
+            formatted_y = format_osc_value(gyro_y, GYRO_FACTOR)
+            formatted_z = format_osc_value(gyro_z, GYRO_FACTOR)
+            print(f"X: {formatted_x}\t|\tY: {formatted_y}\t|\tZ: {formatted_z}")
+
+    def gyro_handler_x(unused_addr, gyro_value):
+        global gyro_x
+        gyro_x = gyro_value
+        print_gyro_values()
+
+    def gyro_handler_y(unused_addr, gyro_value):
+        global gyro_y
+        gyro_y = gyro_value
+        print_gyro_values()
+
+    def gyro_handler_z(unused_addr, gyro_value):
+        global gyro_z
+        gyro_z = gyro_value
+        print_gyro_values()
+
     dispatcher = dispatcher.Dispatcher()
-    # dispatcher.set_default_handler(receive_osc_data)
-    dispatcher.map("/data/motion/gyroscope/x", receive_osc_data)
+    dispatcher.map("/data/motion/gyroscope/x", gyro_handler_x)
+    dispatcher.map("/data/motion/gyroscope/y", gyro_handler_y)
+    dispatcher.map("/data/motion/gyroscope/z", gyro_handler_z)
 
     server = osc_server.ThreadingOSCUDPServer((args.ip, args.port), dispatcher)
     print(f"OSC-Server gestartet auf {args.ip}:{args.port}")

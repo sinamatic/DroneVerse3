@@ -1,50 +1,27 @@
+# Sina Steinmüller
+# Stand: 2024-06-25
+# Liest Gyroskop Werte von der Data OSC App am iPhone ein
+# Überträgt die Werte über IP im selben WLAN aufs Macbook
+# Gibt X, Y und Z Werte auf der Konsole aus
+# ToDo: Werte an die Drohne senden; Filterung der Werte
+
 import argparse
 from pythonosc import dispatcher
 from pythonosc import osc_server
 
-# Globale Variablen für die Mittelwertberechnung der Gyroskop-Werte
-buf_count = 0
-buf_gyro = 0
+# Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
+GYRO_FACTOR = 10000.0  # Multiplikationsfaktor für bessere Lesbarkeit
 
 
-def handle_osc_message(address, *args):
-    global buf_count, buf_gyro
-
-    if len(args) > 0:
-        try:
-            gyro_value = float(
-                args[0]
-            )  # Annahme: Die X-Gyroskop-Werte sind das erste Argument
-
-            # Zählt 10 Gyroskop-Werte zusammen
-            if buf_count < 10:
-                buf_gyro += gyro_value
-                buf_count += 1
-            else:
-                gyro_value_mean = buf_gyro / 10  # Division durch 10
-                print(f"Gemittelter X-Gyroskop-Wert: {gyro_value_mean}")
-                buf_gyro = 0
-                buf_count = 0
-
-        except ValueError:
-            print(f"Ungültiger Wert empfangen: {args[0]}")
-
-
-def receive_osc_data(address, *args):
-    if len(args) > 0:
-        try:
-            gyro_value = float(args[0])
-            print(f"Empfangener Gyroskop-Wert: {gyro_value}")
-
-        except ValueError:
-            print(f"Ungültiger Wert empfangen: {args[0]}")
+def format_osc_value(value, factor):
+    return format(value * factor, ".4f")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",
-        default="192.168.178.44",
+        default="141.75.212.3",
         help="Die IP-Adresse, auf der der OSC-Server lauschen soll",
     )
     parser.add_argument(
@@ -55,8 +32,38 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    # Initialisierung der Variablen für die Gyro-Werte
+    gyro_x = None
+    gyro_y = None
+    gyro_z = None
+
+    def print_gyro_values():
+        if gyro_x is not None and gyro_y is not None and gyro_z is not None:
+            formatted_x = format_osc_value(gyro_x, GYRO_FACTOR)
+            formatted_y = format_osc_value(gyro_y, GYRO_FACTOR)
+            formatted_z = format_osc_value(gyro_z, GYRO_FACTOR)
+            print(f"X: {formatted_x}\t|\tY: {formatted_y}\t|\tZ: {formatted_z}")
+
+    def gyro_handler_x(unused_addr, gyro_value):
+        global gyro_x
+        gyro_x = gyro_value
+        print_gyro_values()
+
+    def gyro_handler_y(unused_addr, gyro_value):
+        global gyro_y
+        gyro_y = gyro_value
+        print_gyro_values()
+
+    def gyro_handler_z(unused_addr, gyro_value):
+        global gyro_z
+        gyro_z = gyro_value
+        print_gyro_values()
+
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.set_default_handler(receive_osc_data)
+    # dispatcher.set_default_handler(gyro_handler_x)
+    dispatcher.map("/data/motion/gyroscope/x", gyro_handler_x)
+    dispatcher.map("/data/motion/gyroscope/y", gyro_handler_y)
+    dispatcher.map("/data/motion/gyroscope/z", gyro_handler_z)
 
     server = osc_server.ThreadingOSCUDPServer((args.ip, args.port), dispatcher)
     print(f"OSC-Server gestartet auf {args.ip}:{args.port}")
