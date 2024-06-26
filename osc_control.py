@@ -8,20 +8,23 @@
 import argparse
 from pythonosc import dispatcher
 from pythonosc import osc_server
+import time
 
 # Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
-GYRO_FACTOR = 10000.0  # Multiplikationsfaktor für bessere Lesbarkeit
+GYRO_FACTOR = 100.0  # Multiplikationsfaktor für bessere Lesbarkeit
 
 
 def format_osc_value(value, factor):
-    return format(value * factor, ".4f")
+    return format(value * factor, ".0f")  # Formattierung ohne Nachkommastelle
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",
-        default="141.75.212.3",
+        # ip address of the computer, change if neccessary
+        default=input("Gib die IP-Adresse ein (Standard: 141.75.212.3): ")
+        or "141.75.212.3",
         help="Die IP-Adresse, auf der der OSC-Server lauschen soll",
     )
     parser.add_argument(

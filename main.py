@@ -4,6 +4,7 @@ from djitellopy import Tello
 
 # Initialisiere Mediapipe
 mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
 
@@ -59,6 +60,10 @@ def main():
         # Überprüfe, ob der Zeigefinger in der oberen, unteren oder mittleren Region liegt
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
+                mp_drawing.draw_landmarks(
+                    frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
+                )
+
                 index_finger_tip = hand_landmarks.landmark[
                     mp_hands.HandLandmark.INDEX_FINGER_TIP
                 ]
