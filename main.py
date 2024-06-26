@@ -4,7 +4,7 @@ from djitellopy import Tello
 
 # Initialisiere Mediapipe
 mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
+mp_drawing = mp.solutions.drawing_utils  # Hand skeleton
 hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
 
