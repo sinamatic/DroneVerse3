@@ -18,7 +18,8 @@ def format_osc_value(value, factor):
     return format(value * factor, ".0f")  # Formattierung ohne Nachkommastelle
 
 
-if __name__ == "__main__":
+def start_osc_detection():
+    print("OSC-Detection gestartet")
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",

@@ -1,22 +1,43 @@
+from djitellopy import Tello
+
+
+# Funktion zur Initialisierung der Drohne
+def initialize_drone():
+    drone = Tello()
+    print("Drone initialized.")
+    drone.connect()
+    print("Drone connected.")
+    drone.streamoff()
+    drone.streamon()
+    return drone
+
+
+test_with_drone = False
+
+if test_with_drone:
+    drone = initialize_drone()
+    print("Drone initialized.")
+
+
 def drone_up():
-    print("Drone goes up")
+    print("Dronecontrol: Up")
 
 
 def drone_down():
-    print("Drone goes down")
+    print("Dronecontrol: down")
 
 
 def drone_left():
-    print("Drone goes left")
+    print("Dronecontrol: left")
 
 
 def drone_right():
-    print("Drone goes right")
+    print("Dronecontrol: right")
 
 
 def drone_forward():
-    print("Drone goes forward")
+    print("Dronecontrol: forward")
 
 
 def drone_backward():
-    print("Drone goes backward")
+    print("Dronecontrol: backward")

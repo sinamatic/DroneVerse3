@@ -12,9 +12,7 @@ def draw_hand_skeleton(image_flipped, results, mp_hands):
             )
 
 
-def start_roibased_gesture_detection(
-    image_flipped, gesture_directions, hands, mp_hands
-):
+def start_roibased_gesture_detection(image_flipped, direction, hands, mp_hands):
 
     # Define top and bottom Rois
     height, width, _ = image_flipped.shape
@@ -45,28 +43,31 @@ def start_roibased_gesture_detection(
 
                 # Finger oben
                 if finger_y < roi_top:
-                    gesture_directions = "up"
+                    direction = "up"
+                    print(direction)
 
                 # Finger unten
                 elif finger_y > roi_bottom:
-                    gesture_directions = "down"
+                    direction = "down"
+                    print(direction)
 
                 else:
                     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
 
                     # Finger rechts
                     if index_finger_tip.x < thumb_tip.x:
-                        gesture_directions = "left"
+                        direction = "left"
+                        print(direction)
 
                     # Finger links
                     elif index_finger_tip.x > thumb_tip.x:
-                        gesture_directions = "right"
+                        direction = "right"
+                        print(direction)
 
                     # Kein Finger
                     else:
-                        gesture_directions = "none"
-
-    return gesture_directions
+                        direction = "none"
+                        print(direction)
 
 
 def draw_rois(image_flipped, roi_top, roi_bottom, roi_middle_left, roi_middle_right):
