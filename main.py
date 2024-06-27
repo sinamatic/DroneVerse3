@@ -9,12 +9,18 @@ from keyboarddetection import run_keyboard_control
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
 
-# choosen_detection = "gestures"  # Wähle die Gestenerkennung aus
-# choosen_detection = "osc"  # Wähle die OSCerkennung aus
-choosen_detection = "keyboard"  # Wähle die Tastaturerkennung aus
+# Globale Variablen für die Auswahl
+chosen_detection = None
+chosen_control = None
 
-choosen_control = "print"  # Wähle die Druckausgabe aus
-# choosen_control = "tello"  # Wähle die Tello-Steuerung aus
+# Choose between gesture, osc and keyboard detection
+# chosen_detection = "gestures"
+# chosen_detection = "osc"
+chosen_detection = "keyboard"
+
+# Choose between print and tello controller
+chosen_control = "print"
+# chosen_control = "tello"
 
 
 def direction_from_gestures(direction):
@@ -34,11 +40,12 @@ def direction_from_keyboard(direction):
 
 # Funktion zur Weiterleitung der Richtung an dronecontrol.py
 def send_direction_to_drone(direction):
+    global chosen_control
 
     # Choose between print and tello controller
-    if choosen_control == "print":
+    if chosen_control == "print":
         drone_controller = PrintDroneController()
-    elif choosen_control == "tello":
+    elif chosen_control == "tello":
         drone_controller = TelloDroneController()
 
     if direction == "up":
@@ -58,11 +65,16 @@ def send_direction_to_drone(direction):
 
 
 if __name__ == "__main__":
-    if choosen_detection == "gesture":
+    # import userinterface
+
+    # Start user interface
+    # userinterface.start_user_interface()
+
+    if chosen_detection == "gesture":
         run_gesture_detection(direction_from_gestures)
-    elif choosen_detection == "osc":
+    elif chosen_detection == "osc":
         run_osc_detection(direction_from_osc)
-    elif choosen_detection == "keyboard":
+    elif chosen_detection == "keyboard":
         run_keyboard_control(direction_from_keyboard)
     else:
         print("Ungültige Auswahl")

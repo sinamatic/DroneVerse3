@@ -1,3 +1,5 @@
+# userinterface.py
+
 import tkinter as tk
 from PIL import Image, ImageTk
 
@@ -9,25 +11,32 @@ def create_button(window, text, command):
 
 
 def set_gestenerkennung():
-    choosen_control = "Gestenerkennung"
-    print(f"Gewählte Steuerung: {choosen_control}")
-    return choosen_control
+    global chosen_detection
+    chosen_detection = "gesture"
+    print(f"Gewählte Steuerung: {chosen_detection}")
+    close_window()
 
 
 def set_handysteuerung():
-    choosen_control = "Handysteuerung"
-    print(f"Gewählte Steuerung: {choosen_control}")
-    return choosen_control
+    global chosen_detection
+    chosen_detection = "osc"
+    print(f"Gewählte Steuerung: {chosen_detection}")
+    close_window()
 
 
 def set_tastatursteuerung():
-    choosen_control = "Tastatursteuerung"
-    print(f"Gewählte Steuerung: {choosen_control}")
-    return choosen_control
+    global chosen_detection
+    chosen_detection = "keyboard"
+    print(f"Gewählte Steuerung: {chosen_detection}")
+    close_window()
+
+
+def close_window():
+    window.destroy()
 
 
 def start_user_interface():
-
+    global window
     window = tk.Tk()
     window.geometry("600x1080")
 
@@ -45,4 +54,5 @@ def start_user_interface():
     create_button(button_frame, "Gestenerkennung starten", set_gestenerkennung)
     create_button(button_frame, "Handysteuerung starten", set_handysteuerung)
     create_button(button_frame, "Tastatursteuerung starten", set_tastatursteuerung)
+
     window.mainloop()
