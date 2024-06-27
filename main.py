@@ -10,13 +10,13 @@ from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
 
 # Globale Variablen für die Auswahl
-chosen_detection = None
-chosen_control = None
+# chosen_detection = None
+# chosen_control = None
 
 # Choose between gesture, osc and keyboard detection
 # chosen_detection = "gestures"
-# chosen_detection = "osc"
-chosen_detection = "keyboard"
+chosen_detection = "osc"
+# chosen_detection = "keyboard"
 
 # Choose between print and tello controller
 chosen_control = "print"

@@ -2,8 +2,8 @@
 # Stand: 2024-06-25
 # Liest Gyroskop Werte von der Data OSC App am iPhone ein
 # Überträgt die Werte über IP im selben WLAN aufs Macbook
-# Gibt X, Y und Z Werte auf der Konsole aus
-# ToDo: Werte an die Drohne senden; Filterung der Werte
+# Gibt Richtung an main.py zurück
+
 
 import argparse
 from collections import deque
@@ -12,35 +12,46 @@ from pythonosc import osc_server
 
 # Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
 GYRO_FACTOR = 100.0  # Multiplikationsfaktor für bessere Lesbarkeit
-HISTORY_SIZE = 100  # Anzahl der Werte zur Berechnung
+HISTORY_SIZE = 500  # Anzahl der Werte zur Berechnung der Richtung
 
 
 # Funktion zur Berechnung der Richtung basierend auf Durchschnittswerten
-def calculate_direction(gyro_x_values, gyro_y_values, gyro_z_values):
-    # Toleranzschwelle zur Erkennung der Bewegung
-    TOLERANCE = 1.0
+def determine_direction(gyro_x_values, gyro_y_values, gyro_z_values):
+    # Kombiniere die Gyrowerte in eine Liste von Tupeln
+    gyro_values = list(zip(gyro_x_values, gyro_y_values, gyro_z_values))
 
-    avg_gyro_x = sum(gyro_x_values) / len(gyro_x_values)
-    avg_gyro_y = sum(gyro_y_values) / len(gyro_y_values)
-    avg_gyro_z = sum(gyro_z_values) / len(gyro_z_values)
+    # Initialisiere Summen für x, y und z
+    sum_x, sum_y, sum_z = 0, 0, 0
 
-    if abs(avg_gyro_x) > TOLERANCE:
-        if avg_gyro_x > 0:
+    for x, y, z in gyro_values:
+        sum_x += x
+        sum_y += y
+        sum_z += z
+
+    # Berechne den Durchschnitt
+    avg_x = sum_x / HISTORY_SIZE
+    avg_y = sum_y / HISTORY_SIZE
+    avg_z = sum_z / HISTORY_SIZE
+
+    # Bestimme die größte durchschnittliche absolute Bewegung
+    max_value = max(abs(avg_x), abs(avg_y), abs(avg_z))
+
+    # Bestimme die Richtung basierend auf dem größten Wert
+    if max_value == abs(avg_x):
+        if avg_x > 0:
             return "right"
         else:
             return "left"
-    elif abs(avg_gyro_y) > TOLERANCE:
-        if avg_gyro_y > 0:
-            return "up"
-        else:
+    elif max_value == abs(avg_y):
+        if avg_y > 0:
             return "down"
-    elif abs(avg_gyro_z) > TOLERANCE:
-        if avg_gyro_z > 0:
+        else:
+            return "up"
+    elif max_value == abs(avg_z):
+        if avg_z > 0:
             return "forward"
         else:
             return "backward"
-    else:
-        return "none"
 
 
 def format_osc_value(value, factor):
@@ -86,7 +97,7 @@ def run_osc_detection(direction_callback):
             and len(gyro_y_values) == HISTORY_SIZE
             and len(gyro_z_values) == HISTORY_SIZE
         ):
-            direction = calculate_direction(gyro_x_values, gyro_y_values, gyro_z_values)
+            direction = determine_direction(gyro_x_values, gyro_y_values, gyro_z_values)
             direction_callback(direction)
 
     def gyro_handler_x(unused_addr, gyro_value):
