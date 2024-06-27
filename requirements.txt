@@ -1,13 +1,5 @@
-djitellopy==2.5.0
-mediapipe==0.10.0
-opencv_contrib_python==4.8.1.78
-opencv_python==4.9.0.80
-Pillow==9.4.0
-Pillow==10.3.0
-pygame==2.5.2
-python_osc==1.8.3
-
-generated with 
-```
-pipreqs
-```
+opencv-python
+mediapipe
+python_osc
+pygame
+djitellopy

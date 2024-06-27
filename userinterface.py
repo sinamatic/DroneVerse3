@@ -1,58 +1,75 @@
 # userinterface.py
 
-import tkinter as tk
-from PIL import Image, ImageTk
+# userinterface.py
+
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtGui import QPixmap
+
+chosen_detection = "none"
 
 
-def create_button(window, text, command):
-    button = tk.Button(window, text=text, command=command, bg="white")
-    button.pack(pady=20)
-    button.configure(font=("Arial", 20, "bold"))
+def create_button(layout, text, command):
+    button = QPushButton(text)
+    button.setStyleSheet("background-color: black; font-size: 20px; font-weight: bold;")
+    button.clicked.connect(command)
+    layout.addWidget(button)
 
 
 def set_gestenerkennung():
-    global chosen_detection
     chosen_detection = "gesture"
     print(f"Gewählte Steuerung: {chosen_detection}")
     close_window()
 
 
 def set_handysteuerung():
-    global chosen_detection
     chosen_detection = "osc"
     print(f"Gewählte Steuerung: {chosen_detection}")
     close_window()
 
 
 def set_tastatursteuerung():
-    global chosen_detection
     chosen_detection = "keyboard"
     print(f"Gewählte Steuerung: {chosen_detection}")
     close_window()
 
 
 def close_window():
-    window.destroy()
+    window.close()
 
 
 def start_user_interface():
     global window
-    window = tk.Tk()
-    window.geometry("600x1080")
+    app = QApplication(sys.argv)
+    window = QWidget()
+    window.setGeometry(100, 100, 600, 1080)
+    window.setWindowTitle("User Interface")
 
     # Load and set the background image
-    image = Image.open("images/background.jpg")
-    background_image = ImageTk.PhotoImage(image)
-    background_label = tk.Label(window, image=background_image)
-    background_label.place(relwidth=1, relheight=1)
+    label = QLabel(window)
+    pixmap = QPixmap("images/background.jpg")
+    label.setPixmap(pixmap)
+    label.setScaledContents(True)
+    label.resize(window.size())
 
-    # Create a frame to hold the buttons and set its background to be transparent
-    button_frame = tk.Frame(window, bg="blue", bd=10)
-    button_frame.place(relx=0.5, rely=0.33, anchor="center")
+    # Create a layout to hold the buttons
+    layout = QVBoxLayout()
 
     # Create buttons
-    create_button(button_frame, "Gestenerkennung starten", set_gestenerkennung)
-    create_button(button_frame, "Handysteuerung starten", set_handysteuerung)
-    create_button(button_frame, "Tastatursteuerung starten", set_tastatursteuerung)
+    create_button(layout, "Gestenerkennung starten", set_gestenerkennung)
+    create_button(layout, "Handysteuerung starten", set_handysteuerung)
+    create_button(layout, "Tastatursteuerung starten", set_tastatursteuerung)
 
-    window.mainloop()
+    # Set the layout for the window and add the label
+    container = QWidget(window)
+    container.setLayout(layout)
+    container.setGeometry(
+        150, 300, 300, 500
+    )  # Position the container within the window
+
+    window.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    start_user_interface()

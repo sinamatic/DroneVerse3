@@ -83,13 +83,6 @@ def run_osc_detection(direction_callback):
     gyro_y_values = deque(maxlen=HISTORY_SIZE)
     gyro_z_values = deque(maxlen=HISTORY_SIZE)
 
-    def print_gyro_values():
-        if gyro_x_values and gyro_y_values and gyro_z_values:
-            formatted_x = format_osc_value(gyro_x_values[-1], GYRO_FACTOR)
-            formatted_y = format_osc_value(gyro_y_values[-1], GYRO_FACTOR)
-            formatted_z = format_osc_value(gyro_z_values[-1], GYRO_FACTOR)
-            print(f"X: {formatted_x}\t|\tY: {formatted_y}\t|\tZ: {formatted_z}")
-
     def update_direction():
         nonlocal direction
         if (

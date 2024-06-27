@@ -4,7 +4,9 @@ Gestenerkennung nur bei rechter Hand, linke Hand wird ignoriert.
 
 # ToDo
 
-- dronecontrol.py mit tello funktionen versehen und in main.py einbauen
+- dronecontrol.py mit tello funktionen versehen
+- mit drohne testen
+- user interface einbauen in main.py, aktuell bricht code nach eingabe von steuerung (klick auf button) ab, main wird danach nicht mehr ausgeführt
 
 ## testmain.py
 
@@ -35,3 +37,9 @@ iPhone mit Display nach oben halten, Kamera auf der Linken Seite, Homebutton auf
 - Hintere Längskante nach unten kippen: up
 - iPhone gerade halten (Display oben) und gegen Uhrzeigersinn drehen: forward
 - iPhone gerade halten (Display oben) und im Uhrzeigersinn drehen: backward
+
+## Installation
+
+```shell
+pip install -r requirements.txt
+```
