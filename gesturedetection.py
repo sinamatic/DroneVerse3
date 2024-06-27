@@ -8,9 +8,9 @@ hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
 
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
-def run_gesture_detection():
+def run_gesture_detection(direction_callback):
     # reset drone position
-    direction = "none"
+    # direction = "none"
 
     # testing boolean
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
@@ -70,7 +70,7 @@ def run_gesture_detection():
                     # Kein Finger
                     else:
                         print("Hand ist nicht ausgerichtet")
-                print(direction)
+                direction_callback(direction)
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
@@ -86,6 +86,7 @@ def run_gesture_detection():
 
     cap.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()
+    # return direction
 
 
 def draw_rois(
@@ -112,4 +113,5 @@ def define_rois(frame):
 
 
 if __name__ == "__main__":
-    run_gesture_detection()
+    # callback funktion, print hier wird überschrieben in main.py
+    run_gesture_detection(lambda direction: print(f"gesturedetection.py {direction}"))
