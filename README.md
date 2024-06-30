@@ -1,7 +1,5 @@
 # DroneVerse
 
-![Beschreibung des Bildes](images/Klassendiagramm.png)
-
 # ToDo
 
 - dronecontrol.py mit tello funktionen versehen
@@ -16,6 +14,8 @@
 # Main.py
 
 Das Skript main.py dient als zentrale Steuerungseinheit für ein Drohnenkontrollsystem. Es integriert verschiedene Module zur Erkennung von Steuerbefehlen sowie zur Kontrolle der Drohne. Im Folgenden wird die Funktionsweise des Skripts erläutert:
+
+![Beschreibung des Bildes](images/Klassendiagramm.png)
 
 ## Importieren der Erkennungs- und Kontrollmodule:
 
