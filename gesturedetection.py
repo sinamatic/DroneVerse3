@@ -46,7 +46,29 @@ def run_gesture_detection(direction_callback):
                 index_finger_tip = hand_landmarks.landmark[
                     mp_hands.HandLandmark.INDEX_FINGER_TIP
                 ]
+
+                # Definiere eine Liste der Fingerspitzen-Bezeichnungen in der Reihenfolge, die mediapipe verwendet
+                finger_tip_landmarks = [
+                    mp_hands.HandLandmark.THUMB_TIP,
+                    mp_hands.HandLandmark.INDEX_FINGER_TIP,
+                    mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
+                    mp_hands.HandLandmark.RING_FINGER_TIP,
+                    mp_hands.HandLandmark.PINKY_TIP,
+                ]
+
                 finger_y = int(index_finger_tip.y * height)
+
+                all_fingers_spread = all(
+                    hand_landmarks.landmark[landmark].y
+                    < hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y
+                    for landmark in finger_tip_landmarks
+                )
+
+                all_fingers_fist = all(
+                    hand_landmarks.landmark[landmark].y
+                    > hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y
+                    for landmark in finger_tip_landmarks
+                )
 
                 # Finger oben
                 if finger_y < roi_top:
@@ -61,10 +83,18 @@ def run_gesture_detection(direction_callback):
 
                     # Finger rechts
                     if index_finger_tip.x < thumb_tip.x:
+                        if all_fingers_spread:
+                            direction = "forward"
+                        if all_fingers_fist:
+                            direction = "backward"
                         direction = "left"
 
                     # Finger links
                     elif index_finger_tip.x > thumb_tip.x:
+                        if all_fingers_spread:
+                            direction = "forward"
+                        if all_fingers_fist:
+                            direction = "backward"
                         direction = "right"
 
                     # Kein Finger
