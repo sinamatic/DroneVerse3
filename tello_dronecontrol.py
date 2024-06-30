@@ -1,3 +1,9 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+""" 
+This program provides a simple Tello drone controller for demonstration purposes.
+Needs to be updated, not tested yet.
+"""
 from djitellopy import Tello
 
 

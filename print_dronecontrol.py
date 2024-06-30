@@ -1,3 +1,9 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+""" 
+This program provides a simple print-based drone controller for demonstration purposes.
+
+"""
 # print_dronecontrol.py
 
 

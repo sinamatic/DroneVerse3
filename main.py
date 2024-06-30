@@ -1,3 +1,9 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+""" 
+Main program that starts the chosen detection and control modules based on the user's choice.
+"""
+
 # main.py
 
 # import detection modules

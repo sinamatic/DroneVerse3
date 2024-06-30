@@ -1,3 +1,8 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+""" 
+This program gives the user the option to choose between different detection and control methods for a drone.
+"""
 # userinterface.py
 
 import sys

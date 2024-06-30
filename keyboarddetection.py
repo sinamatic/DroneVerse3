@@ -1,3 +1,8 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+""" 
+This program uses Pygame to detect keyboard input and control the drone based on the user's choice.
+"""
 import pygame
 import sys
 
