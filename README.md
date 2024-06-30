@@ -1,5 +1,7 @@
 # DroneVerse
 
+![Beschreibung des Bildes](images/Klassendiagramm.png)
+
 # ToDo
 
 - dronecontrol.py mit tello funktionen versehen
