@@ -1,5 +1,4 @@
 # main.py
-# import userinterface
 
 # import detection modules
 from gesturedetection import run_gesture_detection
@@ -12,15 +11,7 @@ from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
 
 
-# Choose between gesture, osc and keyboard detection
-# chosen_detection = "gesture"
-# chosen_detection = "osc"
-# chosen_detection = "keyboard"
-
-# Choose between print and tello controller
-chosen_control = "print"
-# chosen_control = "tello"
-
+# Choose between print and tello controller, check userinterface
 chosen_detection = None
 chosen_control = None
 

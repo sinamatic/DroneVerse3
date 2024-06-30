@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QButtonGroup,
 )
+from PyQt5.QtGui import QPixmap, QPalette, QBrush
+from PyQt5.QtCore import Qt
 
 
 class UserInterface(QWidget):
@@ -24,19 +26,26 @@ class UserInterface(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Drone Control Interface")
-        self.setGeometry(100, 100, 300, 200)
+        self.setGeometry(100, 100, 600, 1080)
+
+        # Set background image
+        self.set_background_image("images/background.jpg")
 
         layout = QVBoxLayout()
 
         detection_layout = QVBoxLayout()
         detection_label = QLabel("Choose Detection Method:")
+        detection_label.setStyleSheet("color: white;")
         detection_layout.addWidget(detection_label)
 
         self.detection_group = QButtonGroup(self)
 
         gesture_radio = QRadioButton("Gesture")
+        gesture_radio.setStyleSheet("color: white;")
         osc_radio = QRadioButton("OSC")
+        osc_radio.setStyleSheet("color: white;")
         keyboard_radio = QRadioButton("Keyboard")
+        keyboard_radio.setStyleSheet("color: white;")
 
         self.detection_group.addButton(gesture_radio)
         self.detection_group.addButton(osc_radio)
@@ -50,12 +59,15 @@ class UserInterface(QWidget):
 
         control_layout = QVBoxLayout()
         control_label = QLabel("Choose Control Method:")
+        control_label.setStyleSheet("color: white;")
         control_layout.addWidget(control_label)
 
         self.control_group = QButtonGroup(self)
 
         print_radio = QRadioButton("Print")
+        print_radio.setStyleSheet("color: white;")
         tello_radio = QRadioButton("Tello")
+        tello_radio.setStyleSheet("color: white;")
 
         self.control_group.addButton(print_radio)
         self.control_group.addButton(tello_radio)
@@ -71,6 +83,13 @@ class UserInterface(QWidget):
         layout.addWidget(start_button)
 
         self.setLayout(layout)
+
+    def set_background_image(self, image_path):
+        oImage = QPixmap(image_path)
+        sImage = oImage.scaled(self.size(), Qt.IgnoreAspectRatio)
+        palette = QPalette()
+        palette.setBrush(QPalette.Window, QBrush(sImage))
+        self.setPalette(palette)
 
     def start_clicked(self):
         detection_button = self.detection_group.checkedButton()

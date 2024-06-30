@@ -39,9 +39,9 @@ def run_gesture_detection(direction_callback):
         # Überprüfe, ob der Zeigefinger in der oberen, unteren oder mittleren Region liegt
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
-                mp_drawing.draw_landmarks(
-                    frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
-                )
+                # Spiegeln der x-Koordinaten der Landmarks, damit Skelett richtigrum ist
+                for landmark in hand_landmarks.landmark:
+                    landmark.x = 1.0 - landmark.x
 
                 index_finger_tip = hand_landmarks.landmark[
                     mp_hands.HandLandmark.INDEX_FINGER_TIP
@@ -61,15 +61,20 @@ def run_gesture_detection(direction_callback):
 
                     # Finger rechts
                     if index_finger_tip.x < thumb_tip.x:
-                        direction = "right"
+                        direction = "left"
 
                     # Finger links
                     elif index_finger_tip.x > thumb_tip.x:
-                        direction = "left"
+                        direction = "right"
 
                     # Kein Finger
                     else:
                         print("Hand ist nicht ausgerichtet")
+
+                # draw skeleton
+                mp_drawing.draw_landmarks(
+                    frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
+                )
                 direction_callback(direction)
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an

@@ -1,8 +1,8 @@
 # Sina Steinmüller
-# Stand: 2024-06-25
-# Liest Gyroskop Werte von der Data OSC App am iPhone ein
-# Überträgt die Werte über IP im selben WLAN aufs Macbook
-# Gibt Richtung an main.py zurück
+# Stand: 2024-06-30
+""" 
+This program reads the gyroscope values from the OSC server and calculates the direction of the movement based on the average values of the last 500 values.
+"""
 
 
 import argparse
