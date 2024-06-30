@@ -148,7 +148,6 @@ Steuert die DJI Tello drohne entsprechend der gewählten Detection. Muss noch ko
 - user interface einbauen in main.py, aktuell bricht code nach eingabe von steuerung (klick auf button) ab, main wird danach nicht mehr ausgeführt
 - gestenerkennung Faust für rückwärts, offene Hand (Papier) für vorwärts implementieren (handlandmarks)
 - tastatursteuerung überarbeiten
--
 
 # Installation
 
@@ -156,6 +155,9 @@ Steuert die DJI Tello drohne entsprechend der gewählten Detection. Muss noch ko
 - Python 3.11.6
 - .venv
 
+## Auf Mac
+
 ```shell
+
 pip install -r requirements.txt
 ```
