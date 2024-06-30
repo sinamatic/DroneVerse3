@@ -5,6 +5,7 @@
 from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
+import userinterface
 
 # import control modules
 from print_dronecontrol import PrintDroneController
@@ -12,13 +13,16 @@ from tello_dronecontrol import TelloDroneController
 
 
 # Choose between gesture, osc and keyboard detection
-# chosen_detection = "gestures"
-chosen_detection = "osc"
+# chosen_detection = "gesture"
+# chosen_detection = "osc"
 # chosen_detection = "keyboard"
 
 # Choose between print and tello controller
 chosen_control = "print"
 # chosen_control = "tello"
+
+chosen_detection = None
+chosen_control = None
 
 
 def direction_from_gestures(direction):
@@ -59,22 +63,19 @@ def send_direction_to_drone(direction):
     elif direction == "backward":
         drone_controller.backward()
     else:
-        print(f"Ungültige Richtung: {direction}")
+        print(f"Invalid direction: {direction}")
 
 
 if __name__ == "__main__":
-    import userinterface
+    chosen_detection, chosen_control = userinterface.get_user_choices()
 
-    # userinterface.start_user_interface() TO DO: Implement user interface
-
-    print("User interface started.")
     if chosen_detection == "gesture":
         run_gesture_detection(direction_from_gestures)
     elif chosen_detection == "osc":
-        print("OSC detection started.")
+        print("Main: OSC detection started.")
         run_osc_detection(direction_from_osc)
         print("OSC detection ended.")
     elif chosen_detection == "keyboard":
         run_keyboard_control(direction_from_keyboard)
     else:
-        print("Ungültige Auswahl")
+        print("Invalid choice.")
