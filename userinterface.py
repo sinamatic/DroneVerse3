@@ -85,7 +85,11 @@ class UserInterface(QWidget):
         start_button = QPushButton("Start")
         start_button.clicked.connect(self.start_clicked)
 
+        change_detection_button = QPushButton("Change Detection")
+        change_detection_button.clicked.connect(self.change_detection_clicked)
+
         layout.addWidget(start_button)
+        layout.addWidget(change_detection_button)
 
         self.setLayout(layout)
 
@@ -107,6 +111,11 @@ class UserInterface(QWidget):
         else:
             error_dialog = QLabel("Please select both detection and control methods.")
             error_dialog.show()
+
+    def change_detection_clicked(self):
+        self.chosen_detection = None
+        self.chosen_control = None
+        self.show()  # Show the interface again to allow re-selection
 
 
 def get_user_choices():

@@ -1,3 +1,16 @@
+# DroneVerse
+
+# ToDo
+
+- dronecontrol.py mit tello funktionen versehen
+- mit drohne testen
+- tastatursteuerung überarbeiten
+- Abbruchfunktionen mit Taste Q in Keyboarddetection und OSC Detection einbauen
+- ggf. Gestenerkennung ohne Regionen, nur mit Fingern (bisher gescheitert)
+- Countdown und HighScore einbauen
+- Sensor für Endzeit integrieren
+- Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr als zB Gesten Daten, so filtern dass für Drohne passt
+
 # Main.py
 
 Das Skript main.py dient als zentrale Steuerungseinheit für ein Drohnenkontrollsystem. Es integriert verschiedene Module zur Erkennung von Steuerbefehlen sowie zur Kontrolle der Drohne. Im Folgenden wird die Funktionsweise des Skripts erläutert:
@@ -158,15 +171,6 @@ Simuliert die Drohnensteuerung mittels Printausgaben, da ich keine Drohne zum ta
 # tello_dronecontrol.py
 
 Steuert die DJI Tello drohne entsprechend der gewählten Detection. Muss noch korrekt implementiert werden.
-
-# ToDo
-
-- dronecontrol.py mit tello funktionen versehen
-- mit drohne testen
-- user interface einbauen in main.py, aktuell bricht code nach eingabe von steuerung (klick auf button) ab, main wird danach nicht mehr ausgeführt
-- gestenerkennung Faust für rückwärts, offene Hand (Papier) für vorwärts implementieren (handlandmarks)
-- tastatursteuerung überarbeiten
--
 
 # Installation
 

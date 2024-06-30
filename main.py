@@ -11,6 +11,7 @@ from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
+import cv2
 
 # import control modules
 from print_dronecontrol import PrintDroneController
@@ -64,15 +65,14 @@ def send_direction_to_drone(direction):
 
 
 if __name__ == "__main__":
-    chosen_detection, chosen_control = userinterface.get_user_choices()
 
-    if chosen_detection == "gesture":
-        run_gesture_detection(direction_from_gestures)
-    elif chosen_detection == "osc":
-        print("Main: OSC detection started.")
-        run_osc_detection(direction_from_osc)
-        print("OSC detection ended.")
-    elif chosen_detection == "keyboard":
-        run_keyboard_control(direction_from_keyboard)
-    else:
-        print("Invalid choice.")
+    while True:
+        chosen_detection, chosen_control = userinterface.get_user_choices()
+        if chosen_detection == "gesture":
+            run_gesture_detection(direction_from_gestures)
+        elif chosen_detection == "osc":
+            run_osc_detection(direction_from_osc)
+        elif chosen_detection == "keyboard":
+            run_keyboard_control(direction_from_keyboard)
+        else:
+            "Invalid detection method."

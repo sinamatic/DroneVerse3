@@ -9,6 +9,7 @@ import argparse
 from collections import deque
 from pythonosc import dispatcher as osc_dispatcher_module
 from pythonosc import osc_server
+import cv2
 
 # Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
 GYRO_FACTOR = 100.0  # Multiplikationsfaktor für bessere Lesbarkeit
@@ -120,5 +121,6 @@ def run_osc_detection(direction_callback):
 
 
 if __name__ == "__main__":
+
     # callback funktion
     run_osc_detection(lambda direction: print(f"oscdetection.py sagt {direction}"))

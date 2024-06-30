@@ -99,11 +99,6 @@ def run_gesture_detection(direction_callback):
         if key & 0xFF == ord("q"):  # Beende die Schleife, wenn 'q' gedrückt wird
             break
 
-        # drone start
-        if key & 0xFF == ord("s"):  # Wenn 's' gedrückt wird, gib "s gedrückt" aus
-            # print("s: Drone start \t")
-            print("drone takeoff …")
-
     cap.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()
     # return direction
