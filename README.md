@@ -56,10 +56,28 @@ Diese Funktion ist die Kernfunktion des Moduls. Sie erfasst Frames von der Webca
 - Konvertiert jeden Frame in das RGB-Format und spiegelt ihn horizontal für eine natürlichere Darstellung.
 - Verarbeitet jeden Frame mit dem Handerkennungsmodell von Mediapipe (hands.process(frame_rgb)).
 - Zeichnet die ROIs und die erkannten Handlandmarken auf dem Frame.
-- Erkennt die Position des Zeigefingers und bestimmt basierend auf dessen Position in den definierten ROIs die Richtung ("up", "down", "left", "right").
+- Erkennt die Position des Zeigefingers und bestimmt basierend auf dessen Position in den definierten ROIs die Richtung ("up", "down", "left", "right", "forward", "backward").
 - Ruft die Richtungsrückruffunktion direction_callback(direction) auf, um die erkannte Richtung an main.py zu übergeben.
 - Zeigt den aktuellen Frame mit den Zeichnungen und ROIs in einem Fenster (cv2.imshow) an.
 - Überprüft Tastatureingaben für das Beenden des Programms ('q' für Beenden, 's' für Drohnenstart).
+
+### Oben und unten erkennen
+
+- Die Position des Zeigefingers wird durch dessen vertikale Koordinate relativ zum Bildschirm oder einer Referenzebene bestimmt.
+- Wenn die vertikale Position des Zeigefingers über einer definierten Grenze (roi_top) liegt, wird die Geste als "oben" erkannt.
+- Liegt der Zeigefinger unterhalb einer definierten Grenze (roi_bottom), wird die Geste als "unten" interpretiert.
+
+### Links und rechts erkennen:
+
+- Die horizontale Position des Zeigefingers wird im Vergleich zur Daumenspitze bewertet.
+- Wenn die x-Koordinate des Zeigefingers links von der Daumenspitze liegt, wird dies als "links" klassifiziert.
+- Liegt der Zeigefinger rechts von der Daumenspitze, wird dies als "rechts" identifiziert.
+
+### Vorwärts und rückwärts erkennen:
+
+- Die Gesten "vorwärts" und "rückwärts" basieren auf der euklidischen Distanz zwischen Daumenspitze und Zeigefingerspitze.
+- Ein definierter Schwellwert (treshold_forward) bestimmt, wann die Geste als "vorwärts" interpretiert wird, basierend auf der Nähe der Finger zueinander.
+- Ein anderer Schwellwert (treshold_backward) definiert, wann die Geste als "rückwärts" erkannt wird, wenn die Finger weiter voneinander entfernt sind.
 
 # oscdetection.py
 

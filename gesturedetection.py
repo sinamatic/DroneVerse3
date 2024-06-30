@@ -61,24 +61,15 @@ def run_gesture_detection(direction_callback):
                 else:
                     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
                     # Schwellwerte definieren
-                    treshold_backward = 0.1  # Beispielwert für den Schwellwert zwischen Daumen- und Zeigefingerspitze
-                    treshold_forward = 0.20  # Beispielwert für den Schwellwert zwischen Daumen- und Zeigefingerspitze
+                    treshold_backward = 0.1
+                    treshold_forward = 0.20
 
+                    # Berechne die Distanz zwischen Daumen und Zeigefinger
                     distance = math.sqrt(
                         (index_finger_tip.x - thumb_tip.x) ** 2
                         + (index_finger_tip.y - thumb_tip.y) ** 2
                     )
 
-                    # Berechnung der horizontalen Distanz zwischen Daumen- und Zeigefingerspitze
-                    # distance_x = abs(index_finger_tip.x - thumb_tip.x)
-
-                    # Berechnung der vertikalen Distanz zwischen Daumen- und Zeigefingerspitze
-                    # distance_y = abs(index_finger_tip.y - thumb_tip.y)
-                    # Backward (Rückwärts)
-
-                    # Forward (Vorwärts)
-
-                    # Finger rechts
                     if distance < treshold_backward:
                         direction = "backward"
                         print("ToDo update treshold! {distance}")
