@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import math
 
 # Initialisiere Mediapipe
 mp_hands = mp.solutions.hands
@@ -47,28 +48,7 @@ def run_gesture_detection(direction_callback):
                     mp_hands.HandLandmark.INDEX_FINGER_TIP
                 ]
 
-                # Definiere eine Liste der Fingerspitzen-Bezeichnungen in der Reihenfolge, die mediapipe verwendet
-                finger_tip_landmarks = [
-                    mp_hands.HandLandmark.THUMB_TIP,
-                    mp_hands.HandLandmark.INDEX_FINGER_TIP,
-                    mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
-                    mp_hands.HandLandmark.RING_FINGER_TIP,
-                    mp_hands.HandLandmark.PINKY_TIP,
-                ]
-
                 finger_y = int(index_finger_tip.y * height)
-
-                all_fingers_spread = all(
-                    hand_landmarks.landmark[landmark].y
-                    < hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y
-                    for landmark in finger_tip_landmarks
-                )
-
-                all_fingers_fist = all(
-                    hand_landmarks.landmark[landmark].y
-                    > hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y
-                    for landmark in finger_tip_landmarks
-                )
 
                 # Finger oben
                 if finger_y < roi_top:
@@ -80,26 +60,40 @@ def run_gesture_detection(direction_callback):
 
                 else:
                     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+                    # Schwellwerte definieren
+                    treshold_backward = 0.1  # Beispielwert für den Schwellwert zwischen Daumen- und Zeigefingerspitze
+                    treshold_forward = 0.20  # Beispielwert für den Schwellwert zwischen Daumen- und Zeigefingerspitze
+
+                    distance = math.sqrt(
+                        (index_finger_tip.x - thumb_tip.x) ** 2
+                        + (index_finger_tip.y - thumb_tip.y) ** 2
+                    )
+
+                    # Berechnung der horizontalen Distanz zwischen Daumen- und Zeigefingerspitze
+                    # distance_x = abs(index_finger_tip.x - thumb_tip.x)
+
+                    # Berechnung der vertikalen Distanz zwischen Daumen- und Zeigefingerspitze
+                    # distance_y = abs(index_finger_tip.y - thumb_tip.y)
+                    # Backward (Rückwärts)
+
+                    # Forward (Vorwärts)
 
                     # Finger rechts
-                    if index_finger_tip.x < thumb_tip.x:
-                        if all_fingers_spread:
-                            direction = "forward"
-                        if all_fingers_fist:
-                            direction = "backward"
-                        direction = "left"
+                    if distance < treshold_backward:
+                        direction = "backward"
+                        print("ToDo update treshold! {distance}")
 
-                    # Finger links
-                    elif index_finger_tip.x > thumb_tip.x:
-                        if all_fingers_spread:
-                            direction = "forward"
-                        if all_fingers_fist:
-                            direction = "backward"
-                        direction = "right"
+                    elif distance > treshold_forward:
+                        direction = "forward"
+                        print("ToDo update treshold! {distance}")
 
-                    # Kein Finger
                     else:
-                        print("Hand ist nicht ausgerichtet")
+                        if index_finger_tip.x < thumb_tip.x:
+                            direction = "left"
+                        elif index_finger_tip.x > thumb_tip.x:
+                            direction = "right"
+                        else:
+                            print("Hand ist nicht ausgerichtet")
 
                 # draw skeleton
                 mp_drawing.draw_landmarks(
