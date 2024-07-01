@@ -7,9 +7,22 @@
 - tastatursteuerung überarbeiten
 - Abbruchfunktionen mit Taste Q in Keyboarddetection und OSC Detection einbauen
 - ggf. Gestenerkennung ohne Regionen, nur mit Fingern (bisher gescheitert)
-- Countdown und HighScore einbauen
-- Sensor für Endzeit integrieren
-- Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr als zB Gesten Daten, so filtern dass für Drohne passt
+- Userinterface überarbeiten
+  - Countdown und HighScore einbauen, ggf. auf neuen Screen, sodass nach Start der Screen wechselt und man dann "Begin Game" oder so drücken kann
+  - bei "BeginnGame" sollte dann die Drohne abheben und die Zeit starten
+  - EndGame sollte es auch geben, als Button (für Notfälle) und Sensorgesteuert, hierbei sollte dann die Drohne landen, die Zeit stoppen, der Name der Person in die Highscore Tabelle eingetragen werden und das Userinterface zurück zum Startbildschirm (chose detection) gehen
+  - Highscore Tabelle sortiert sich nach kürzester Zeit
+  - Sollte auch Art der Steuerung enthalten (Gesten, Handy oder Tastatur)
+  - IP-Adress Eingabe bei "OSC detection" einbauen
+  - einen "Regionen anzeigen" button als zusätzliche Option bei der Gestenerkennung einbauen, um die Linien im Bild ein- oder auszuschalten
+  - einen "Skelett anzeigen" button als zusätzliche Option bei der Gestenerkennung einbauen, um das Handskellett anzuzeigen oder auszuschalten
+  - einen "Zeige Video" button einbauen, der das Kamerabild ein- oder ausschaltet
+- Gestenerkennung.py
+  - True/False bool "show_video", "show_handskeleton", "show_rois" einbauen
+- Sensor für Endzeiterfassung integrieren, hierfür Endzeit als Pythonausgabe übergeben
+- Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr (anzahl pro Sekunde) als zB Gesten Daten, so filtern dass für Drohne passt
+  - rausfinden wie viele Signale pro Sek die Drohne verarbeiten kann
+- Klassendiagramm überarbeiten eventuell
 
 # Main.py
 
