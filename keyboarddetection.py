@@ -1,28 +1,30 @@
+# Maximilian Richter
 # Sina Steinmüller
-# Stand: 2024-06-30
+# Stand: 2024-07-17
 """ 
 This program uses Pygame to detect keyboard input and control the drone based on the user's choice.
 """
 import pygame
 import sys
-
-# Initialisiere Pygame
-pygame.init()
-
-# Bildschirmgröße und Farben
-SCREEN_WIDTH, SCREEN_HEIGHT = 400, 300
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
-# Initialisiere das Fenster
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Keyboard Control")
+import pygame
+import sys
 
 
-# Hauptfunktion zur Tastatureingabe und Richtungsaktualisierung
+keys_pressed = {
+    "up": False,
+    "down": False,
+    "left": False,
+    "right": False,
+    "takeoff": False,
+    "forward": False,
+    "backward": False,
+}
+
+
 def run_keyboard_control(direction_callback):
-    direction = "none"
-    direction_changed = False  # Flag, um zu prüfen, ob die Richtung geändert wurde
+    pygame.init()
+    screen = pygame.display.set_mode((640, 480))
+    pygame.display.set_caption("Drone Control")
     clock = pygame.time.Clock()
 
     while True:
@@ -30,36 +32,61 @@ def run_keyboard_control(direction_callback):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w and not direction_changed:
-                    direction = "up"
-                    direction_changed = True
-                elif event.key == pygame.K_s and not direction_changed:
-                    direction = "down"
-                    direction_changed = True
-                elif event.key == pygame.K_a and not direction_changed:
-                    direction = "left"
-                    direction_changed = True
-                elif event.key == pygame.K_d and not direction_changed:
-                    direction = "right"
-                    direction_changed = True
+                if event.key == pygame.K_w:
+                    keys_pressed["forward"] = True
+                elif event.key == pygame.K_s:
+                    keys_pressed["backward"] = True
+                elif event.key == pygame.K_a:
+                    keys_pressed["left"] = True
+                elif event.key == pygame.K_d:
+                    keys_pressed["right"] = True
+                elif event.key == pygame.K_UP:
+                    keys_pressed["up"] = True
+                elif event.key == pygame.K_DOWN:
+                    keys_pressed["down"] = True
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
-
             if event.type == pygame.KEYUP:
-                direction_changed = (
-                    False  # Setze das Flag zurück, wenn die Taste losgelassen wird
-                )
+                if event.key == pygame.K_w:
+                    keys_pressed["forward"] = False
+                    direction_callback("stop")
+                elif event.key == pygame.K_s:
+                    keys_pressed["backward"] = False
+                    direction_callback("stop")
+                elif event.key == pygame.K_a:
+                    keys_pressed["left"] = False
+                    direction_callback("stop")
+                elif event.key == pygame.K_d:
+                    keys_pressed["right"] = False
+                    direction_callback("stop")
+                elif event.key == pygame.K_UP:
+                    keys_pressed["up"] = False
+                    direction_callback("stop")
+                elif event.key == pygame.K_DOWN:
+                    keys_pressed["down"] = False
+                    direction_callback("stop")
 
-        direction_callback(direction)
+        try:
+            if keys_pressed["up"]:
+                direction_callback("up")
+            if keys_pressed["down"]:
+                direction_callback("down")
+            if keys_pressed["left"]:
+                direction_callback("left")
+            if keys_pressed["right"]:
+                direction_callback("right")
+            if keys_pressed["forward"]:
+                direction_callback("forward")
+            if keys_pressed["backward"]:
+                direction_callback("backward")
+        except Exception as e:
+            print(f"Ein Fehler ist aufgetreten: {e}")
 
-        # Zeichne den Bildschirm (optional)
-        screen.fill(WHITE)
+        screen.fill((255, 255, 255))
         pygame.display.flip()
-
-        clock.tick(60)  # Begrenze die Schleife auf 60 FPS
+        clock.tick(60)
 
 
 if __name__ == "__main__":

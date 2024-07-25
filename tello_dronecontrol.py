@@ -1,36 +1,77 @@
+# Maximilian Richter
 # Sina Steinmüller
-# Stand: 2024-06-30
+# Stand: 2024-07-17
 """ 
 This program provides a simple Tello drone controller for demonstration purposes.
 Needs to be updated, not tested yet.
 """
 from djitellopy import Tello
+import time
 
 
 class TelloDroneController:
     def __init__(self):
-        drone = Tello()
+        self.drone = Tello()
         print("Drone initialized.")
-        drone.connect()
+        self.speed_left_right = 0  # Links/Rechts
+        self.speed_up_down = 0  # Auf/Ab
+        self.speed_forward_back = 0  # Vorwärts/Rückwärts
+        self.yaw_speed = 0  # Yaw (Drehung)
+        self.drone.connect()
         print("Drone connected.")
-        drone.streamoff()
-        drone.streamon()
-        pass
+        self.drone.streamoff()
+        self.drone.streamon()
+        self.takeoff()  # Drohne hebt ab, sobald die Instanz erstellt wird
+        # Initialisiere die Geschwindigkeiten für alle Richtungen auf 0
 
-    def drone_up(self):
+    def update_movement(self):
+        self.drone.send_rc_control(
+            self.speed_left_right,
+            self.speed_forward_back,
+            self.speed_up_down,
+            self.yaw_speed,
+        )
+
+    def up(self):
+        self.speed_up_down = 30
+        self.update_movement()
         print("Tello: Up")
 
-    def drone_down(self):
-        print("Tello: down")
+    def down(self):
+        self.speed_up_down = -30
+        self.update_movement()
+        print("Tello: Down")
 
-    def drone_left(self):
-        print("Tello: left")
+    def left(self):
+        self.speed_left_right = -30
+        self.update_movement()
+        print("Tello: Left")
 
-    def drone_right(self):
-        print("Tello: right")
+    def right(self):
+        self.speed_left_right = 30
+        self.update_movement()
+        print("Tello: Right")
 
-    def drone_forward(self):
-        print("Tello: forward")
+    def forward(self):
+        self.speed_forward_back = 30
+        self.update_movement()
+        print("Tello: Forward")
 
-    def drone_backward(self):
-        print("Tello: backward")
+    def backward(self):
+        self.speed_forward_back = -30
+        self.update_movement()
+        print("Tello: Backward")
+
+    def takeoff(self):
+        self.drone.takeoff()
+        self.update_movement()
+        print("Tello: Takeoff")
+
+    def stop(self):
+        # Setze alle Geschwindigkeiten auf 0, um die Drohne zu stoppen
+        self.speed_left_right = 0
+        self.speed_up_down = 0
+        self.speed_forward_back = 0
+        self.yaw_speed = 0
+        self.update_movement()
+        print("Tello: Stop")

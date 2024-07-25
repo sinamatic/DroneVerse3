@@ -23,6 +23,7 @@
 - Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr (anzahl pro Sekunde) als zB Gesten Daten, so filtern dass für Drohne passt
   - rausfinden wie viele Signale pro Sek die Drohne verarbeiten kann
 - Klassendiagramm überarbeiten eventuell
+- Neutrale Geste damit drohne sich nicht beweg
 
 # Main.py
 
@@ -196,3 +197,9 @@ Steuert die DJI Tello drohne entsprechend der gewählten Detection. Muss noch ko
 ```shell
 pip install -r requirements.txt
 ```
+
+# ChangeLog
+
+## 01.07.24:
+
+- Updated Readme
