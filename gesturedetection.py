@@ -1,3 +1,6 @@
+# Sina Steinmüller
+# Stand: 2024-07-26
+
 import cv2
 import mediapipe as mp
 import math
@@ -36,6 +39,8 @@ def run_gesture_detection(direction_callback):
         draw_rois(
             frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
         )
+
+        direction = "stop"
 
         # Überprüfe, ob der Zeigefinger in der oberen, unteren oder mittleren Region liegt
         if results.multi_hand_landmarks:
@@ -84,6 +89,7 @@ def run_gesture_detection(direction_callback):
                         elif index_finger_tip.x > thumb_tip.x:
                             direction = "right"
                         else:
+                            direction = "stop"
                             print("Hand ist nicht ausgerichtet")
 
                 # draw skeleton

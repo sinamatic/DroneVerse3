@@ -29,3 +29,6 @@ class PrintDroneController:
 
     def backward(self):
         print("DRONE GOES BACKWARD!", end="\r")
+
+    def stop(self):
+        print("DRONE Stopps.", end="\r")
