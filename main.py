@@ -10,9 +10,9 @@ Main program that starts the chosen detection and control modules based on the u
 # import detection modules
 # main.py
 # import pygame
-from collections import Counter
 import logging
 import time
+from collections import defaultdict
 
 
 # import detection modules
@@ -35,29 +35,76 @@ drone_controller = None
 # pygame.init()
 # clock = pygame.time.Clock()
 
-# Konfigurieren des Loggings mit Millisekunden
+# Timelogger for printing time in milliseconds
 logging.basicConfig(
     format="%(asctime)s.%(msecs)03d - %(message)s",
     level=logging.INFO,
     datefmt="%H:%M:%S",
 )
 
-Counter = 0
+
+signal_counts = defaultdict(int)
+last_output_time = time.time()
 
 
 def direction_from_gestures(direction):
-    # clock.tick(1)
-    logging.info(f"Chosen Control: Gestures \t Direction from Control: {direction}")
+    global signal_counts, last_output_time  # Deklariere Variablen als global
+
+    # Hole die aktuelle Zeit
+    current_time = time.time()
+    current_second = int(current_time)
+    # Zähle das Signal für die aktuelle Sekunde
+    signal_counts[current_second] += 1
+
+    # Logging der Information
+    logging.info(
+        f"{signal_counts[current_second]} Chosen Control: Gestures \t Direction from Control: {direction}"
+    )
+
+    # Prüfe, ob 60 Sekunden seit der letzten Ausgabe vergangen sind
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
+
     send_direction_to_drone(direction)
 
 
 def direction_from_osc(direction):
-    logging.info(f"Chosen Control: Phone \t Direction from Control: {direction}")
+    global signal_counts, last_output_time  # Deklariere Variablen als global
+
+    # Hole die aktuelle Zeit
+    current_time = time.time()
+    current_second = int(current_time)
+    # Zähle das Signal für die aktuelle Sekunde
+    signal_counts[current_second] += 1
+
+    # Logging der Information
+    logging.info(
+        f"{signal_counts[current_second]} Chosen Control: Phone \t Direction from Control: {direction}"
+    )
+
+    # Prüfe, ob 60 Sekunden seit der letzten Ausgabe vergangen sind
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
     send_direction_to_drone(direction)
 
 
 def direction_from_keyboard(direction):
-    logging.info(f"Chosen Control: Keyboard \t Direction from Control: {direction}")
+    global signal_counts, last_output_time  # Deklariere Variablen als global
+
+    # Hole die aktuelle Zeit
+    current_time = time.time()
+    current_second = int(current_time)
+    # Zähle das Signal für die aktuelle Sekunde
+    signal_counts[current_second] += 1
+
+    # Logging der Information
+    logging.info(
+        f"{signal_counts[current_second]} Chosen Control: Keyboard \t Direction from Control: {direction}"
+    )
+
+    # Prüfe, ob 60 Sekunden seit der letzten Ausgabe vergangen sind
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
     send_direction_to_drone(direction)
 
 
