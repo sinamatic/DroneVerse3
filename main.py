@@ -11,6 +11,9 @@ Main program that starts the chosen detection and control modules based on the u
 # main.py
 # import pygame
 from collections import Counter
+import logging
+import time
+
 
 # import detection modules
 from gesturedetection import run_gesture_detection
@@ -32,26 +35,30 @@ drone_controller = None
 # pygame.init()
 # clock = pygame.time.Clock()
 
+# Konfigurieren des Loggings mit Millisekunden
+logging.basicConfig(
+    format="%(asctime)s.%(msecs)03d - %(message)s",
+    level=logging.INFO,
+    datefmt="%H:%M:%S",
+)
+
+Counter = 0
+
 
 def direction_from_gestures(direction):
     # clock.tick(1)
-    print(f"Chosen Control: Gestures \t Direction from Control: {direction}")
+    logging.info(f"Chosen Control: Gestures \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
 
 
 def direction_from_osc(direction):
-    print(f"Chosen Control: Phone \t Direction from Control: {direction}")
+    logging.info(f"Chosen Control: Phone \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
 
 
 def direction_from_keyboard(direction):
-    print(f"Chosen Control: Keyboard \t Direction from Control: {direction}")
+    logging.info(f"Chosen Control: Keyboard \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
-
-
-def filter_directions(direction):
-
-    pass
 
 
 # Funktion zur Weiterleitung der Richtung an dronecontrol.py
