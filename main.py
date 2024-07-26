@@ -13,6 +13,10 @@ Main program that starts the chosen detection and control modules based on the u
 import logging
 import time
 from collections import defaultdict
+from ratelimiter import RateLimiter
+
+# sends 2 messages per second to drone
+rate_limiter = RateLimiter(rate_per_second=2)
 
 
 # import detection modules
@@ -53,10 +57,8 @@ def direction_from_gestures(direction):
     # Hole die aktuelle Zeit
     current_time = time.time()
     current_second = int(current_time)
-    # Zähle das Signal für die aktuelle Sekunde
     signal_counts[current_second] += 1
 
-    # Logging der Information
     logging.info(
         f"{signal_counts[current_second]} Chosen Control: Gestures \t Direction from Control: {direction}"
     )
@@ -65,7 +67,10 @@ def direction_from_gestures(direction):
     if current_time - last_output_time >= 60:
         last_output_time = current_time
 
-    send_direction_to_drone(direction)
+    rate_limiter.update_direction("gestures", direction)
+    rate_limiter.send("gestures", send_direction_to_drone)
+
+    # send_direction_to_drone(direction)
 
 
 def direction_from_osc(direction):
@@ -82,9 +87,9 @@ def direction_from_osc(direction):
         f"{signal_counts[current_second]} Chosen Control: Phone \t Direction from Control: {direction}"
     )
 
-    # Prüfe, ob 60 Sekunden seit der letzten Ausgabe vergangen sind
     if current_time - last_output_time >= 60:
         last_output_time = current_time
+
     send_direction_to_drone(direction)
 
 
@@ -105,6 +110,7 @@ def direction_from_keyboard(direction):
     # Prüfe, ob 60 Sekunden seit der letzten Ausgabe vergangen sind
     if current_time - last_output_time >= 60:
         last_output_time = current_time
+
     send_direction_to_drone(direction)
 
 
