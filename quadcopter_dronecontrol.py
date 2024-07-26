@@ -9,7 +9,7 @@ from djitellopy import Tello
 import time
 
 
-class TelloDroneController:
+class QuadcopterDroneController:
 
     def __init__(self):
         self.drone = Tello()

@@ -15,7 +15,7 @@ from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
-import cv2
+import pygame
 
 # import control modules
 from print_dronecontrol import PrintDroneController
@@ -27,8 +27,12 @@ chosen_detection = None
 chosen_control = None
 drone_controller = None
 
+pygame.init()
+clock = pygame.time.Clock()
+
 
 def direction_from_gestures(direction):
+    clock.tick(1)
     print(f"Chosen Control: Gestures \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
 
