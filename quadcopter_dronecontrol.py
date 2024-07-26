@@ -1,8 +1,8 @@
-# Maximilian Richter
+# Tobias Schwarz
 # Sina Steinmüller
 # Stand: 2024-07-26
 """ 
-This program provides a simple Tello drone controller for demonstration purposes.
+This program provides a simple Quadcopter drone controller for demonstration purposes.
 Needs to be updated, not tested yet.
 """
 from djitellopy import Tello

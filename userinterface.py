@@ -38,6 +38,8 @@ class UserInterface(QWidget):
 
         layout = QVBoxLayout()
 
+        ## DETECTION METHODS
+
         detection_layout = QVBoxLayout()
         detection_label = QLabel("Choose Detection Method:")
         detection_label.setStyleSheet("color: white;")
@@ -47,8 +49,10 @@ class UserInterface(QWidget):
 
         gesture_radio = QRadioButton("Gesture")
         gesture_radio.setStyleSheet("color: white;")
+
         osc_radio = QRadioButton("OSC")
         osc_radio.setStyleSheet("color: white;")
+
         keyboard_radio = QRadioButton("Keyboard")
         keyboard_radio.setStyleSheet("color: white;")
 
@@ -62,6 +66,8 @@ class UserInterface(QWidget):
 
         layout.addLayout(detection_layout)
 
+        ## CONTROL METHODS
+
         control_layout = QVBoxLayout()
         control_label = QLabel("Choose Control Method:")
         control_label.setStyleSheet("color: white;")
@@ -71,14 +77,20 @@ class UserInterface(QWidget):
 
         print_radio = QRadioButton("Print")
         print_radio.setStyleSheet("color: white;")
+
         tello_radio = QRadioButton("Tello")
         tello_radio.setStyleSheet("color: white;")
 
+        quadcopter_radio = QRadioButton("Quadcopter")
+        quadcopter_radio.setStyleSheet("color: white;")
+
         self.control_group.addButton(print_radio)
         self.control_group.addButton(tello_radio)
+        self.control_group.addButton(quadcopter_radio)
 
         control_layout.addWidget(print_radio)
         control_layout.addWidget(tello_radio)
+        control_layout.addWidget(quadcopter_radio)
 
         layout.addLayout(control_layout)
 
