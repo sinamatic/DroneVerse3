@@ -9,13 +9,14 @@ Main program that starts the chosen detection and control modules based on the u
 
 # import detection modules
 # main.py
+# import pygame
+from collections import Counter
 
 # import detection modules
 from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
-import pygame
 
 # import control modules
 from print_dronecontrol import PrintDroneController
@@ -28,12 +29,12 @@ chosen_detection = None
 chosen_control = None
 drone_controller = None
 
-pygame.init()
-clock = pygame.time.Clock()
+# pygame.init()
+# clock = pygame.time.Clock()
 
 
 def direction_from_gestures(direction):
-    clock.tick(1)
+    # clock.tick(1)
     print(f"Chosen Control: Gestures \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
 
@@ -46,6 +47,11 @@ def direction_from_osc(direction):
 def direction_from_keyboard(direction):
     print(f"Chosen Control: Keyboard \t Direction from Control: {direction}")
     send_direction_to_drone(direction)
+
+
+def filter_directions(direction):
+
+    pass
 
 
 # Funktion zur Weiterleitung der Richtung an dronecontrol.py
