@@ -2,14 +2,10 @@
 
 # ToDo
 
-- dronecontrol.py mit tello funktionen versehen
-- mit drohne testen
-- tastatursteuerung überarbeiten
 - Abbruchfunktionen mit Taste Q in Keyboarddetection und OSC Detection einbauen
 - ggf. Gestenerkennung ohne Regionen, nur mit Fingern (bisher gescheitert)
 - Userinterface überarbeiten
   - Countdown und HighScore einbauen, ggf. auf neuen Screen, sodass nach Start der Screen wechselt und man dann "Begin Game" oder so drücken kann
-  - bei "BeginnGame" sollte dann die Drohne abheben und die Zeit starten
   - EndGame sollte es auch geben, als Button (für Notfälle) und Sensorgesteuert, hierbei sollte dann die Drohne landen, die Zeit stoppen, der Name der Person in die Highscore Tabelle eingetragen werden und das Userinterface zurück zum Startbildschirm (chose detection) gehen
   - Highscore Tabelle sortiert sich nach kürzester Zeit
   - Sollte auch Art der Steuerung enthalten (Gesten, Handy oder Tastatur)
@@ -23,7 +19,7 @@
 - Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr (anzahl pro Sekunde) als zB Gesten Daten, so filtern dass für Drohne passt
   - rausfinden wie viele Signale pro Sek die Drohne verarbeiten kann
 - Klassendiagramm überarbeiten eventuell
-- Neutrale Geste damit drohne sich nicht beweg
+- Neutrale Geste damit drohne sich nicht bewegt
 
 # Main.py
 
