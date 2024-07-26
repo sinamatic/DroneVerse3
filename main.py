@@ -20,6 +20,7 @@ import pygame
 # import control modules
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
+from quadcopter_dronecontrol import QuadcopterDroneController
 from tello_dronecontrol import Tello
 
 # Choose between print and tello controller, check userinterface
@@ -81,7 +82,9 @@ if __name__ == "__main__":
 
     if chosen_control == "tello":
         drone_controller = TelloDroneController()
-    if chosen_control == "print":
+    elif chosen_control == "quadcopter":
+        drone_controller = QuadcopterDroneController()
+    elif chosen_control == "print":
         drone_controller = PrintDroneController()
     else:
         print("Invalid control method.")
