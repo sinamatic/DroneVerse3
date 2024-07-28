@@ -1,19 +1,34 @@
 # Tobias Schwarz
-# Sina Steinmüller
 # Stand: 2024-07-26
 """ 
-This program provides a simple Quadcopter drone controller for demonstration purposes.
+This program provides a simple Tello drone controller for demonstration purposes.
 Needs to be updated, not tested yet.
 """
-from djitellopy import Tello
+
+#git add .
+#git commit -m "nachricht"
+#git push
+
+
 import time
+import telnetlib
+
+testing = True
+
+HOST = "192.168.43.133"  # Ersetze dies mit der Adresse deines Telnet-Servers
+PORT = 23  # Standard-Telnet-Port, ändere dies entsprechend deiner Konfiguration
+if not testing:
+    print("Connecting to Telnet server...")
+    tn = telnetlib.Telnet(HOST, PORT) # Verbindung zum Telnet-Server herstellen
+    if not telnetlib.Telnet: print("Telnet-Verbindung konnte nicht hergestellt werden.")
 
 
 class QuadcopterDroneController:
-
+        
     def __init__(self):
-        self.drone = Tello()
-        print("Drone initialized.")
+
+        
+        # print("Drone initialized.")
 
         # Initialisiere Geschwindigkeiten
         self.speed_left_right = 0  # Links/Rechts
@@ -21,22 +36,15 @@ class QuadcopterDroneController:
         self.speed_forward_back = 0  # Vorwärts/Rückwärts
         self.yaw_speed = 0  # Drehung (bisher noch nicht implementiert)
 
-        self.drone.connect()
-        print("Drone connected.")
-        self.drone.streamoff()
-        self.drone.streamon()
-
-        self.takeoff()  # Drohne hebt ab, sobald die Instanz erstellt wird
 
         self.speed = 10  # Geschwindigkeit der Drohne
 
     def update_movement(self):
-        self.drone.send_rc_control(
-            self.speed_left_right,
-            self.speed_forward_back,
-            self.speed_up_down,
-            self.yaw_speed,
-        )
+        self.speed_left_right,
+        self.speed_forward_back,
+        self.speed_up_down,
+        self.yaw_speed
+
 
     def up(self):
         self.speed_up_down = self.speed
@@ -49,24 +57,20 @@ class QuadcopterDroneController:
         print("Tello: Down")
 
     def left(self):
-        self.speed_left_right = -self.speed
-        self.update_movement()
-        print("Tello: Left")
+        if not testing: tn.write("a".encode('ascii') + b"\n")
+        print("Quad: Left")
 
-    def right(self):
-        self.speed_left_right = self.speed
-        self.update_movement()
-        print("Tello: Right")
+    def right(self):                
+        if not testing: tn.write("d".encode('ascii') + b"\n") 
+        print("Quad: Right")
 
     def forward(self):
-        self.speed_forward_back = self.speed
-        self.update_movement()
-        print("Tello: Forward")
+        if not testing: tn.write("w".encode('ascii') + b"\n") 
+        print("Quad: Forward")
 
     def backward(self):
-        self.speed_forward_back = -self.speed
-        self.update_movement()
-        print("Tello: Backward")
+        if not testing: tn.write("s".encode('ascii') + b"\n") 
+        print("Quad: Backward")
 
     def takeoff(self):
         self.drone.takeoff()
@@ -80,7 +84,8 @@ class QuadcopterDroneController:
         self.speed_forward_back = 0
         self.yaw_speed = 0
         self.update_movement()
-        print("Tello: Stop")
+        if not testing: tn.write("x".encode('ascii') + b"\n")
+        print("Quad: Stop")
 
     def yaw_left(self):
         self.yaw_speed = -self.speed

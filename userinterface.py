@@ -31,7 +31,7 @@ class UserInterface(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Drone Control Interface")
-        self.setGeometry(100, 100, 600, 1080)
+        self.setGeometry(10, 50, 400, 600)
 
         # Set background image
         self.set_background_image("images/background.jpg")

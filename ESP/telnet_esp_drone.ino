@@ -32,95 +32,76 @@ void setup() {
   Serial.print("IP-Adresse des ESP32: ");
   Serial.println(WiFi.localIP());
 
-  test();
-
   TelnetStream.begin();
   Serial.println("Telnet-Server gestartet. Verbinde dich mit einem Telnet-Client.");
+  TelnetStream.print("Verfügbare Zeichen: 't' 'w' 'a' 's' 'd' 'x'");
+
+  test();
 }
 
 void loop() {
   if (TelnetStream.available()) {
     char incomingChar = TelnetStream.read();
     switch (incomingChar) {
-//      case 'R':
-//        // Serial.println("Detected char: ");
-//        // Serial.print(incomingChar);
-//        TelnetStream.println("Neustart des ESP32...");
-//        TelnetStream.stop();
-//        delay(100);
-//        // ESP.restart();
-//        break;
-//      case 'C':
-//        Serial.println("Detected char: ");
-//        Serial.print(incomingChar);
-//        TelnetStream.println("Auf Wiedersehen!");
-//        TelnetStream.stop();
-//        break;
-      case 'T':
+      case 't':
+        stop(); 
         Serial.println(incomingChar);
         TelnetStream.println("Test erfolgreich: T");
         break;
       case 'w':
+        stop();
         Serial.println(incomingChar);
-        vor();
+        digitalWrite(12,HIGH);
+        digitalWrite(14,HIGH);        
         TelnetStream.println("Test erfolgreich: w");
+        delay(500);
         break;
       case 'a':
+        stop();
         Serial.println(incomingChar);
         TelnetStream.println("Test erfolgreich: a");
-        left();
+        digitalWrite(14,HIGH); 
+        delay(500);       
         break;       
       case 's':
+        stop();
         Serial.println(incomingChar);
         TelnetStream.println("Test erfolgreich: s");
-        hoch();
+        digitalWrite(27,HIGH);
+        digitalWrite(26,HIGH);
+        delay(500);
         break;       
       case 'd':
+        stop();
         Serial.println(incomingChar);
         TelnetStream.println("Test erfolgreich: d");
-        right();
+        digitalWrite(12,HIGH);
+        delay(500);
         break;
+      case 'x':
+        Serial.println(incomingChar);
+        Serial.print("  -> Case: x");
+        digitalWrite(12,LOW);
+        digitalWrite(14,LOW);
+        digitalWrite(27,LOW);
+        digitalWrite(26,LOW);
     }
   }
 }
 
-void key_pressed(int i) {
-  // TelnetStream.println("Starting: " + i);
-  digitalWrite(i,HIGH);
-  delay(1000);
-  digitalWrite(i,LOW);
-  }
+//void key_pressed(int i) {
+//  // TelnetStream.println("Starting: " + i);
+//  digitalWrite(i,HIGH);
+//  delay(1000);
+//  digitalWrite(i,LOW);
+//  }
 
-// TASTE: W
-void vor () {
-  digitalWrite(12,HIGH);
-  digitalWrite(14,HIGH);
-  delay(1000);
+void stop() {
+  Serial.println("stopping  -> Case: stop");
   digitalWrite(12,LOW);
   digitalWrite(14,LOW);
-  }
-
-//TASTE: A
-void left() {
-  digitalWrite(14,HIGH);
-  delay(1000);
-  digitalWrite(14,LOW);
-  }
-
-//TASTE: S
-void hoch() {
-  digitalWrite(27,HIGH);
-  digitalWrite(26,HIGH);
-  delay(1000);
   digitalWrite(27,LOW);
   digitalWrite(26,LOW);
-  }
-
-//TASTE: D
-void right() {
-  digitalWrite(12,HIGH);
-  delay(1000);
-  digitalWrite(12,LOW);
   }
 
 void test() {
@@ -129,7 +110,7 @@ void test() {
   digitalWrite(14,HIGH);
   digitalWrite(27,HIGH);
   digitalWrite(26,HIGH);
-  delay(1000);
+  delay(500);
   digitalWrite(12,LOW);
   digitalWrite(14,LOW);
   digitalWrite(27,LOW);
