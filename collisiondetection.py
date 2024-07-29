@@ -28,7 +28,7 @@ def run_collision_detection(collision_callback):
             if old_frame is not None:
                 diff = cv2.absdiff(old_frame, gray)
                 _, bin_diff = cv2.threshold(diff, 100, 255, cv2.THRESH_BINARY)
-                # cv2.imshow("diff_frame", bin_diff)
+                cv2.imshow("diff_frame", bin_diff)
 
                 top_margin = bin_diff[:margin_size, :]
                 bottom_margin = bin_diff[-margin_size:, :]

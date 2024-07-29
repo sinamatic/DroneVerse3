@@ -108,31 +108,28 @@ def update_collision_status(status):
 def send_direction_to_drone(filtered_direction):
     global drone_controller
 
-    if collision_status[filtered_direction]:
-        print(f"Kollision erkannt: {filtered_direction} Richtung blockiert.")
-        return
-
     drone_controller.speed_left_right = 0
     drone_controller.speed_up_down = 0
     drone_controller.speed_forward_back = 0
     drone_controller.yaw_speed = 0
 
-    if filtered_direction == "up":
+    # Überprüfen Sie, ob eine Kollision in der gewünschten Richtung vorliegt
+    if filtered_direction == "up":  # and not collision_status["up"]:
         drone_controller.up()
-    elif filtered_direction == "down":
+    elif filtered_direction == "down":  # and not collision_status["down"]:
         drone_controller.down()
-    elif filtered_direction == "left":
+    elif filtered_direction == "left" and not collision_status["left"]:
         drone_controller.left()
-    elif filtered_direction == "right":
+    elif filtered_direction == "right" and not collision_status["right"]:
         drone_controller.right()
-    elif filtered_direction == "forward":
+    elif filtered_direction == "forward" and not collision_status["forward"]:
         drone_controller.forward()
-    elif filtered_direction == "backward":
+    elif filtered_direction == "backward" and not collision_status["backward"]:
         drone_controller.backward()
     elif filtered_direction == "stop":
         drone_controller.stop()
     else:
-        print(f"Invalid direction: {filtered_direction}")
+        print(f"Invalid direction or collision detected: {filtered_direction}")
 
 
 if __name__ == "__main__":
