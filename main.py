@@ -1,41 +1,22 @@
-# Sina Steinmüller
-# Stand: 2024-07-26
-
-""" 
-Main program that starts the chosen detection and control modules based on the user's choice.
-"""
-
-# main.py
-
-# import detection modules
-# main.py
-# import pygame
 import logging
 import time
-from collections import defaultdict
+from collections import defaultdict, Counter
 
-
-# import detection modules
 from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
 
-from collisiondetection import run_collission_detection
+from collisiondetection import run_collision_detection, collision_status
 
-# import control modules
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
 from quadcopter_dronecontrol import QuadcopterDroneController
 
-from collections import Counter
-
-# Choose between print and tello controller, check userinterface
 chosen_detection = None
 chosen_control = None
 drone_controller = None
 
-# Limit the rate of messages to the drone
 max_size_gestures = 15
 max_size_osc = 300
 max_size_keyboard = 60
@@ -43,7 +24,6 @@ directions_gestures = []
 directions_osc = []
 directions_keyboard = []
 
-# Timelogger for printing time in milliseconds
 signal_counts = defaultdict(int)
 last_output_time = time.time()
 logging.basicConfig(
@@ -53,7 +33,6 @@ logging.basicConfig(
 )
 
 
-# Limits the rate of messages to the drone depending on recognition
 def filter_direction(directions, max_size):
     if len(directions) >= max_size:
         counter = Counter(directions)
@@ -64,12 +43,10 @@ def filter_direction(directions, max_size):
 
 
 def direction_from_gestures(direction):
-    global signal_counts, last_output_time  # Deklariere Variablen als global
+    global signal_counts, last_output_time
 
-    # Logging info with time stamp
     current_time, current_second = set_logging_info()
 
-    # Limits the rate of messages to the drone depending on recognition
     directions_gestures.append(direction)
     filtered_direction = filter_direction(directions_gestures, max_size_gestures)
     if filtered_direction is not None:
@@ -78,18 +55,15 @@ def direction_from_gestures(direction):
         )
         send_direction_to_drone(filtered_direction)
 
-    # Resets logging info after 60 seconds
     if current_time - last_output_time >= 60:
         last_output_time = current_time
 
 
 def direction_from_osc(direction):
-    global signal_counts, last_output_time  # Deklariere Variablen als global
+    global signal_counts, last_output_time
 
-    # Logging info with time stamp
     current_time, current_second = set_logging_info()
 
-    # Limits the rate of messages to the drone depending on recognition
     directions_osc.append(direction)
     filtered_direction = filter_direction(directions_osc, max_size_osc)
     if filtered_direction is not None:
@@ -98,18 +72,15 @@ def direction_from_osc(direction):
         )
         send_direction_to_drone(direction)
 
-    # Resets logging info after 60 seconds
     if current_time - last_output_time >= 60:
         last_output_time = current_time
 
 
 def direction_from_keyboard(direction):
-    global signal_counts, last_output_time  # Deklariere Variablen als global
+    global signal_counts, last_output_time
 
-    # Logging info with time stamp
     current_time, current_second = set_logging_info()
 
-    # Limits the rate of messages to the drone depending on recognition
     directions_keyboard.append(direction)
     filtered_direction = filter_direction(directions_keyboard, max_size_keyboard)
     if filtered_direction is not None:
@@ -118,7 +89,6 @@ def direction_from_keyboard(direction):
         )
         send_direction_to_drone(direction)
 
-    # Resets logging info after 60 seconds
     if current_time - last_output_time >= 60:
         last_output_time = current_time
 
@@ -130,9 +100,17 @@ def set_logging_info():
     return current_time, current_second
 
 
-# Funktion zur Weiterleitung der Richtung an dronecontrol.py
+def update_collision_status(status):
+    global collision_status
+    collision_status = status
+
+
 def send_direction_to_drone(filtered_direction):
     global drone_controller
+
+    if collision_status[filtered_direction]:
+        print(f"Kollision erkannt: {filtered_direction} Richtung blockiert.")
+        return
 
     drone_controller.speed_left_right = 0
     drone_controller.speed_up_down = 0
@@ -180,3 +158,5 @@ if __name__ == "__main__":
         run_gesture_detection(direction_from_gestures)
     else:
         print("Invalid detection method.")
+
+    run_collision_detection(update_collision_status)

@@ -1,22 +1,11 @@
-# Lisa Berbig
-# Stand 29-07-2024
-"""
-Dieses Programm dient dazu zu verhindern, dass eine Drohne über einen bestimmten Bereich hinausfliegt.
-Dafür wird das Bild einer 360° Kamera zu einem 180° Bild verarbeitet. Daraus wird ein binäres Differenzbild erstellt, in welchem weiße Pixel in den Randbereichen erkannt werden.
-"""
 import numpy as np
 import cv2
 
-
-def _init_(self):
-    self.shape = None
-    print()
+collision_status = {"forward": False, "backward": False, "left": False, "right": False}
 
 
 def crop_sides(image, crop_fraction):
     height, width = image.shape[:2]
-
-    # Berechne den Start- und Endpunkt für das Zuschneiden
     crop_width = int(width * crop_fraction)
     start_x = crop_width
     end_x = width - crop_width
@@ -24,9 +13,7 @@ def crop_sides(image, crop_fraction):
     return cropped_image
 
 
-def run_collission_detection(collission_callback):
-    collission = False
-    # Definiere den Randbereich in px
+def run_collision_detection(collision_callback):
     margin_size = 10
     cap = cv2.VideoCapture(0)
     old_frame = None
@@ -41,46 +28,31 @@ def run_collission_detection(collission_callback):
             if old_frame is not None:
                 diff = cv2.absdiff(old_frame, gray)
                 _, bin_diff = cv2.threshold(diff, 100, 255, cv2.THRESH_BINARY)
-                cv2.imshow("diff_frame", bin_diff)
+                # cv2.imshow("diff_frame", bin_diff)
 
-                # Extrahiere die Randbereiche
                 top_margin = bin_diff[:margin_size, :]
                 bottom_margin = bin_diff[-margin_size:, :]
                 left_margin = bin_diff[:, :margin_size]
                 right_margin = bin_diff[:, -margin_size:]
 
-                # Überprüfe, ob in den Randbereichen weiße Pixel (255) vorhanden sind
-                top_has_white = np.any(top_margin == 255)
-                bottom_has_white = np.any(bottom_margin == 255)
-                left_has_white = np.any(left_margin == 255)
-                right_has_white = np.any(right_margin == 255)
+                collision_status["forward"] = np.any(top_margin == 255)
+                collision_status["backward"] = np.any(bottom_margin == 255)
+                collision_status["left"] = np.any(left_margin == 255)
+                collision_status["right"] = np.any(right_margin == 255)
 
-                # Ausgabe der Ergebnisse
-                if top_has_white:
+                if collision_status["forward"]:
                     print("Gefahrbereich vorne")
-                    collission = "forward"
-
-                if bottom_has_white:
+                if collision_status["backward"]:
                     print("Gefahrbereich hinten")
-                    collission = "backward"
-
-                if left_has_white:
+                if collision_status["left"]:
                     print("Gefahrbereich links")
-                    collission = "left"
-
-                if right_has_white:
+                if collision_status["right"]:
                     print("Gefahrbereich rechts")
-                    collission = "right"
 
-                if not (
-                    top_has_white
-                    or bottom_has_white
-                    or left_has_white
-                    or right_has_white
-                ):
+                if not any(collision_status.values()):
                     print("Sicherer Bereich")
 
-                collission_callback(collission)
+                collision_callback(collision_status)
 
             old_frame = gray
 
@@ -95,7 +67,4 @@ def run_collission_detection(collission_callback):
 
 
 if __name__ == "__main__":
-    # callback funktion, print hier wird überschrieben in main.py
-    run_collission_detection(
-        lambda collission: print(f"collissiondetection.py {collission}")
-    )
+    run_collision_detection(lambda status: print(f"collision_status: {status}"))
