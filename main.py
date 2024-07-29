@@ -77,7 +77,8 @@ def direction_from_gestures(direction):
         send_direction_to_drone(filtered_direction)
 
     # Resets logging info after 60 seconds
-    reset_logging_info(current_time)
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
 
 
 def direction_from_osc(direction):
@@ -96,7 +97,8 @@ def direction_from_osc(direction):
         send_direction_to_drone(direction)
 
     # Resets logging info after 60 seconds
-    reset_logging_info(current_time)
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
 
 
 def direction_from_keyboard(direction):
@@ -115,7 +117,8 @@ def direction_from_keyboard(direction):
         send_direction_to_drone(direction)
 
     # Resets logging info after 60 seconds
-    reset_logging_info(current_time)
+    if current_time - last_output_time >= 60:
+        last_output_time = current_time
 
 
 def set_logging_info():
@@ -123,11 +126,6 @@ def set_logging_info():
     current_second = int(current_time)
     signal_counts[current_second] += 1
     return current_time, current_second
-
-
-def reset_logging_info(current_time):
-    if current_time - last_output_time >= 60:
-        last_output_time = current_time
 
 
 # Funktion zur Weiterleitung der Richtung an dronecontrol.py

@@ -1,10 +1,3 @@
-# Sina Steinmüller
-# Stand: 2024-06-30
-""" 
-This program gives the user the option to choose between different detection and control methods for a drone.
-"""
-# userinterface.py
-
 import sys
 from PyQt5.QtWidgets import (
     QApplication,
@@ -15,8 +8,10 @@ from PyQt5.QtWidgets import (
     QLabel,
     QRadioButton,
     QButtonGroup,
+    QCheckBox,
+    QLineEdit,
 )
-from PyQt5.QtGui import QPixmap, QPalette, QBrush
+from PyQt5.QtGui import QPixmap, QPalette, QBrush, QFont
 from PyQt5.QtCore import Qt
 
 
@@ -31,79 +26,194 @@ class UserInterface(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Drone Control Interface")
-        self.setGeometry(100, 100, 600, 1080)
+        self.setGeometry(100, 100, 1920, 1080)  # Querformat Vollbild
 
         # Set background image
-        self.set_background_image("images/background.jpg")
+        self.set_background_image("images/DSC01497.jpg")
 
-        layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+
+        # Set a larger font
+        font = QFont()
+        font.setPointSize(20)
+
+        # DRONEVERSE Header
+        header_label = QLabel("DRONEVERSE")
+        header_label.setStyleSheet("color: white;")
+        header_label.setFont(QFont("Arial", 80, QFont.Bold))
+        header_label.setAlignment(Qt.AlignCenter)
+        header_label.setContentsMargins(0, 50, 0, 0)  # 50px nach unten verschieben
+        main_layout.addWidget(header_label, alignment=Qt.AlignTop)
 
         ## DETECTION METHODS
-
-        detection_layout = QVBoxLayout()
-        detection_label = QLabel("Choose Detection Method:")
+        detection_section = QVBoxLayout()
+        detection_label = QLabel("How do you want to detect?")
         detection_label.setStyleSheet("color: white;")
-        detection_layout.addWidget(detection_label)
+        detection_label.setFont(font)
+        detection_section.addWidget(detection_label)
+
+        detection_methods_layout = QHBoxLayout()
 
         self.detection_group = QButtonGroup(self)
 
+        # Gesture detection section
+        gesture_section = QVBoxLayout()
+        gesture_header = QLabel("Gesture detection")
+        gesture_header.setStyleSheet("color: white;")
+        gesture_header.setFont(QFont("Arial", 40, QFont.Bold))
+        gesture_header.setAlignment(Qt.AlignLeft)
+        gesture_section.addWidget(gesture_header)
         gesture_radio = QRadioButton("Gesture")
         gesture_radio.setStyleSheet("color: white;")
+        gesture_radio.setFont(font)
+        gesture_section.addWidget(gesture_radio)
 
+        # Phone detection section
+        phone_section = QVBoxLayout()
+        phone_header = QLabel("OSC detection")
+        phone_header.setStyleSheet("color: white;")
+        phone_header.setFont(QFont("Arial", 40, QFont.Bold))
+        phone_header.setAlignment(Qt.AlignLeft)
+        phone_section.addWidget(phone_header)
         osc_radio = QRadioButton("OSC")
         osc_radio.setStyleSheet("color: white;")
+        osc_radio.setFont(font)
+        phone_section.addWidget(osc_radio)
+        ip_address_input = QLineEdit()
+        ip_address_input.setPlaceholderText("Enter IP address")
+        ip_address_input.setStyleSheet(
+            "color: black; background-color: white; max-width: 200px;"
+        )
+        ip_address_input.setFont(font)
+        # ip_address_input.setMaximumWidth(200)  # Ensures the maximum width is 200 pixels
+        phone_section.addWidget(ip_address_input)
 
+        # Keyboard detection section
+        keyboard_section = QVBoxLayout()
+        keyboard_header = QLabel("Keyboard detection")
+        keyboard_header.setStyleSheet("color: white;")
+        keyboard_header.setFont(QFont("Arial", 40, QFont.Bold))
+        keyboard_header.setAlignment(Qt.AlignLeft)
+        keyboard_section.addWidget(keyboard_header)
         keyboard_radio = QRadioButton("Keyboard")
         keyboard_radio.setStyleSheet("color: white;")
+        keyboard_radio.setFont(font)
+        keyboard_section.addWidget(keyboard_radio)
 
         self.detection_group.addButton(gesture_radio)
         self.detection_group.addButton(osc_radio)
         self.detection_group.addButton(keyboard_radio)
 
-        detection_layout.addWidget(gesture_radio)
-        detection_layout.addWidget(osc_radio)
-        detection_layout.addWidget(keyboard_radio)
+        detection_methods_layout.addLayout(gesture_section)
+        detection_methods_layout.addLayout(phone_section)
+        detection_methods_layout.addLayout(keyboard_section)
 
-        layout.addLayout(detection_layout)
+        detection_section.addLayout(detection_methods_layout)
+
+        ## GESTURES OPTIONS
+        gestures_layout = QVBoxLayout()
+        gestures_label = QLabel("Gestures Options:")
+        gestures_label.setStyleSheet("color: white;")
+        gestures_label.setFont(font)
+        gestures_layout.addWidget(gestures_label)
+
+        self.show_rois_checkbox = QCheckBox("Show Rois")
+        self.show_rois_checkbox.setStyleSheet("color: white;")
+        self.show_rois_checkbox.setFont(font)
+        self.show_video_checkbox = QCheckBox("Show Video")
+        self.show_video_checkbox.setStyleSheet("color: white;")
+        self.show_video_checkbox.setFont(font)
+        self.show_handskeleton_checkbox = QCheckBox("Show Handskeleton")
+        self.show_handskeleton_checkbox.setStyleSheet("color: white;")
+        self.show_handskeleton_checkbox.setFont(font)
+
+        gestures_options_layout = QVBoxLayout()
+        gestures_options_layout.addWidget(self.show_rois_checkbox)
+        gestures_options_layout.addWidget(self.show_video_checkbox)
+        gestures_options_layout.addWidget(self.show_handskeleton_checkbox)
+
+        gestures_layout.addLayout(gestures_options_layout)
+        # gestures_layout.setContentsMargins(20, 0, 0, 0)  # Einrücken der Gesten-Optionen
+
+        detection_section.addLayout(gestures_layout)
+
+        main_layout.addLayout(detection_section)
 
         ## CONTROL METHODS
-
-        control_layout = QVBoxLayout()
-        control_label = QLabel("Choose Control Method:")
+        control_section = QVBoxLayout()
+        control_label = QLabel("What do you want to control?")
         control_label.setStyleSheet("color: white;")
-        control_layout.addWidget(control_label)
+        control_label.setFont(font)
+        control_section.addWidget(control_label)
+
+        control_methods_layout = QHBoxLayout()
 
         self.control_group = QButtonGroup(self)
 
+        # Print controlled section
+        print_section = QVBoxLayout()
+        print_header = QLabel("Control Textoutputs")
+        print_header.setStyleSheet("color: white;")
+        print_header.setFont(QFont("Arial", 40, QFont.Bold))
+        print_header.setAlignment(Qt.AlignLeft)
+        print_section.addWidget(print_header)
         print_radio = QRadioButton("Print")
         print_radio.setStyleSheet("color: white;")
+        print_radio.setFont(font)
+        print_section.addWidget(print_radio)
 
+        # Tello controlled section
+        tello_section = QVBoxLayout()
+        tello_header = QLabel("Control Tello Drone")
+        tello_header.setStyleSheet("color: white;")
+        tello_header.setFont(QFont("Arial", 40, QFont.Bold))
+        tello_header.setAlignment(Qt.AlignLeft)
+        tello_section.addWidget(tello_header)
         tello_radio = QRadioButton("Tello")
         tello_radio.setStyleSheet("color: white;")
+        tello_radio.setFont(font)
+        tello_section.addWidget(tello_radio)
 
+        # Quadcopter controlled section
+        quadcopter_section = QVBoxLayout()
+        quadcopter_header = QLabel("Control Quadcopter Drone")
+        quadcopter_header.setStyleSheet("color: white;")
+        quadcopter_header.setFont(QFont("Arial", 40, QFont.Bold))
+        quadcopter_header.setAlignment(Qt.AlignLeft)
+        quadcopter_section.addWidget(quadcopter_header)
         quadcopter_radio = QRadioButton("Quadcopter")
         quadcopter_radio.setStyleSheet("color: white;")
+        quadcopter_radio.setFont(font)
+        quadcopter_section.addWidget(quadcopter_radio)
 
         self.control_group.addButton(print_radio)
         self.control_group.addButton(tello_radio)
         self.control_group.addButton(quadcopter_radio)
 
-        control_layout.addWidget(print_radio)
-        control_layout.addWidget(tello_radio)
-        control_layout.addWidget(quadcopter_radio)
+        control_methods_layout.addLayout(print_section)
+        control_methods_layout.addLayout(tello_section)
+        control_methods_layout.addLayout(quadcopter_section)
 
-        layout.addLayout(control_layout)
+        control_section.addLayout(control_methods_layout)
 
+        main_layout.addLayout(control_section)
+
+        ## START BUTTONS
+        buttons_layout = QHBoxLayout()
         start_button = QPushButton("Start")
+        start_button.setFont(font)
+        start_button.setFixedHeight(100)  # Set a fixed height for the button
         start_button.clicked.connect(self.start_clicked)
+        quit_button = QPushButton("Quit program")
+        quit_button.setFont(font)
+        quit_button.setFixedHeight(100)  # Set a fixed height for the button
+        quit_button.clicked.connect(self.quit_clicked)
+        buttons_layout.addWidget(start_button)
+        buttons_layout.addWidget(quit_button)
 
-        change_detection_button = QPushButton("Change Detection")
-        change_detection_button.clicked.connect(self.change_detection_clicked)
+        main_layout.addLayout(buttons_layout)
 
-        layout.addWidget(start_button)
-        layout.addWidget(change_detection_button)
-
-        self.setLayout(layout)
+        self.setLayout(main_layout)
 
     def set_background_image(self, image_path):
         oImage = QPixmap(image_path)
@@ -124,10 +234,10 @@ class UserInterface(QWidget):
             error_dialog = QLabel("Please select both detection and control methods.")
             error_dialog.show()
 
-    def change_detection_clicked(self):
+    def quit_clicked(self):
         self.chosen_detection = None
         self.chosen_control = None
-        self.show()  # Show the interface again to allow re-selection
+        QApplication.instance().quit()
 
 
 def get_user_choices():
