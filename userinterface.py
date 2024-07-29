@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QButtonGroup,
     QCheckBox,
-    QLineEdit,
 )
 from PyQt5.QtGui import QPixmap, QPalette, QBrush, QFont
 from PyQt5.QtCore import Qt
@@ -42,7 +41,6 @@ class UserInterface(QWidget):
         header_label.setStyleSheet("color: white;")
         header_label.setFont(QFont("Arial", 80, QFont.Bold))
         header_label.setAlignment(Qt.AlignCenter)
-        header_label.setContentsMargins(0, 50, 0, 0)  # 50px nach unten verschieben
         main_layout.addWidget(header_label, alignment=Qt.AlignTop)
 
         ## DETECTION METHODS
@@ -79,14 +77,6 @@ class UserInterface(QWidget):
         osc_radio.setStyleSheet("color: white;")
         osc_radio.setFont(font)
         phone_section.addWidget(osc_radio)
-        ip_address_input = QLineEdit()
-        ip_address_input.setPlaceholderText("Enter IP address")
-        ip_address_input.setStyleSheet(
-            "color: black; background-color: white; max-width: 200px;"
-        )
-        ip_address_input.setFont(font)
-        # ip_address_input.setMaximumWidth(200)  # Ensures the maximum width is 200 pixels
-        phone_section.addWidget(ip_address_input)
 
         # Keyboard detection section
         keyboard_section = QVBoxLayout()
@@ -133,7 +123,7 @@ class UserInterface(QWidget):
         gestures_options_layout.addWidget(self.show_handskeleton_checkbox)
 
         gestures_layout.addLayout(gestures_options_layout)
-        # gestures_layout.setContentsMargins(20, 0, 0, 0)  # Einrücken der Gesten-Optionen
+        gestures_layout.setContentsMargins(20, 0, 0, 0)  # Einrücken der Gesten-Optionen
 
         detection_section.addLayout(gestures_layout)
 
