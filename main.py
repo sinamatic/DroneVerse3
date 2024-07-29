@@ -21,6 +21,8 @@ from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
 
+from collisiondetection import run_collission_detection
+
 # import control modules
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
