@@ -76,11 +76,11 @@ def run_gesture_detection(direction_callback):
                     )
 
                     if distance < treshold_backward:
-                        # direction = "backward"
+                        direction = "backward"
                         print("ToDo update treshold! {distance}")
 
                     elif distance > treshold_forward:
-                        # direction = "forward"
+                        direction = "forward"
                         print("ToDo update treshold! {distance}")
 
                     else:
