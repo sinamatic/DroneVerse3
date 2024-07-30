@@ -115,9 +115,18 @@ def run_osc_detection(direction_callback):
 
     # Pygame initialisieren und Bildschirm erstellen
     pygame.init()
-    screen = pygame.display.set_mode((640, 480))
+    screen = pygame.display.set_mode((1920, 1080))
     pygame.display.set_caption("OSC Detection")
     clock = pygame.time.Clock()
+
+    # Hintergrundbild laden und skalieren
+    background_image = pygame.image.load("images/DSC01497.jpg")
+    background_image = pygame.transform.scale(background_image, (1920, 1080))
+
+    # Schriftarten und -größen definieren
+    font_large = pygame.font.SysFont("Arial", 80, bold=True)
+    font_medium = pygame.font.SysFont("Arial", 72)
+    font_small = pygame.font.SysFont("Arial", 48)
 
     # Start the server in a separate thread
     server_thread = threading.Thread(target=server.serve_forever)
@@ -134,7 +143,24 @@ def run_osc_detection(direction_callback):
                     running = False
                     break
 
-        screen.fill((255, 255, 255))
+        screen.blit(background_image, (0, 0))
+
+        # Überschriften zeichnen
+        text_surface = font_large.render("DRONEVERSE", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(960, 65))
+        screen.blit(text_surface, text_rect)
+
+        text_surface = font_small.render(
+            "You choose OSC/phone control.", True, (255, 255, 255)
+        )
+        text_rect = text_surface.get_rect(center=(960, 150))
+        screen.blit(text_surface, text_rect)
+
+        # OSC-Ausgabe zeichnen
+        text_surface = font_large.render(direction.upper(), True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(960, 400))
+        screen.blit(text_surface, text_rect)
+
         pygame.display.flip()
         clock.tick(60)
 

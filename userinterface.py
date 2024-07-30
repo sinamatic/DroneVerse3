@@ -99,34 +99,6 @@ class UserInterface(QWidget):
         detection_methods_layout.addLayout(keyboard_section)
 
         detection_section.addLayout(detection_methods_layout)
-
-        ## GESTURES OPTIONS
-        gestures_layout = QVBoxLayout()
-        gestures_label = QLabel("Gestures Options:")
-        gestures_label.setStyleSheet("color: white;")
-        gestures_label.setFont(font)
-        gestures_layout.addWidget(gestures_label)
-
-        self.show_rois_checkbox = QCheckBox("Show Rois")
-        self.show_rois_checkbox.setStyleSheet("color: white;")
-        self.show_rois_checkbox.setFont(font)
-        self.show_video_checkbox = QCheckBox("Show Video")
-        self.show_video_checkbox.setStyleSheet("color: white;")
-        self.show_video_checkbox.setFont(font)
-        self.show_handskeleton_checkbox = QCheckBox("Show Handskeleton")
-        self.show_handskeleton_checkbox.setStyleSheet("color: white;")
-        self.show_handskeleton_checkbox.setFont(font)
-
-        gestures_options_layout = QVBoxLayout()
-        gestures_options_layout.addWidget(self.show_rois_checkbox)
-        gestures_options_layout.addWidget(self.show_video_checkbox)
-        gestures_options_layout.addWidget(self.show_handskeleton_checkbox)
-
-        gestures_layout.addLayout(gestures_options_layout)
-        gestures_layout.setContentsMargins(20, 0, 0, 0)  # Einrücken der Gesten-Optionen
-
-        detection_section.addLayout(gestures_layout)
-
         main_layout.addLayout(detection_section)
 
         ## CONTROL METHODS
