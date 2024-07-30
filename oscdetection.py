@@ -67,8 +67,7 @@ def run_osc_detection(direction_callback):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",
-        default=input("Gib die IP-Adresse ein (Standard: 192.168.178.44): ")
-        or "192.168.178.44",  # sinas macbook
+        default="192.168.50.152",  # lisas router
         help="Die IP-Adresse, auf der der OSC-Server lauschen soll",
     )
     parser.add_argument(

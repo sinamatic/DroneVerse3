@@ -5,14 +5,14 @@
 This program provides a simple Tello drone controller for demonstration purposes.
 Needs to be updated, not tested yet.
 """
-from djitellopy import Tello
+from djitellopy import Tello, tello
 import time
 
 
 class TelloDroneController:
 
     def __init__(self):
-        self.drone = Tello()
+        self.drone = tello.Tello("192.168.50.101")
         print("Drone initialized.")
 
         # Initialisiere Geschwindigkeiten

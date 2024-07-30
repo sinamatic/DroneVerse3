@@ -13,10 +13,6 @@ hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
 def run_gesture_detection(direction_callback):
-    # reset drone position
-    # direction = "none"
-
-    # testing boolean
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
     _, frame = cap.read()  # Lese ein Frame von der Kamera
 
@@ -68,8 +64,8 @@ def run_gesture_detection(direction_callback):
                 else:
                     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
                     # Schwellwerte definieren
-                    treshold_backward = 0.1
-                    treshold_forward = 0.20
+                    treshold_backward = 0.06
+                    treshold_forward = 0.2
 
                     # Berechne die Distanz zwischen Daumen und Zeigefinger
                     distance = math.sqrt(
@@ -79,12 +75,8 @@ def run_gesture_detection(direction_callback):
 
                     if distance < treshold_backward:
                         direction = "backward"
-                        print("ToDo update treshold! {distance}")
-
                     elif distance > treshold_forward:
                         direction = "forward"
-                        print("ToDo update treshold! {distance}")
-
                     else:
                         if index_finger_tip.x < thumb_tip.x:
                             direction = "left"
@@ -92,13 +84,15 @@ def run_gesture_detection(direction_callback):
                             direction = "right"
                         else:
                             direction = "stop"
-                            print("Hand ist nicht ausgerichtet")
 
                 # draw skeleton
                 mp_drawing.draw_landmarks(
                     frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
                 )
                 direction_callback(direction)
+
+        # Zeichne die erkannte Richtung auf dem Frame
+        draw_direction_text(frame, direction)
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
@@ -110,7 +104,25 @@ def run_gesture_detection(direction_callback):
     cap.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()
 
-    # return direction
+
+def draw_direction_text(frame, direction):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    text = f"Direction: {direction}"
+    font_scale = 1.5
+    font_thickness = 3
+    text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
+    text_x = 10
+    text_y = text_size[1] + 10
+    cv2.putText(
+        frame,
+        text,
+        (text_x, text_y),
+        font,
+        font_scale,
+        (255, 255, 255),
+        font_thickness,
+        cv2.LINE_AA,
+    )
 
 
 def draw_rois(
