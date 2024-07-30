@@ -157,4 +157,7 @@ if __name__ == "__main__":
         else:
             print("Invalid detection method.")
 
+        if drone_controller:
+            drone_controller.land()
+
         # run_collision_detection(update_collision_status)
