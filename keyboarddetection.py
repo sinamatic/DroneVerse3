@@ -27,11 +27,13 @@ def run_keyboard_control(direction_callback):
     pygame.display.set_caption("Drone Control")
     clock = pygame.time.Clock()
 
-    while True:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     keys_pressed["forward"] = True
@@ -45,9 +47,9 @@ def run_keyboard_control(direction_callback):
                     keys_pressed["up"] = True
                 elif event.key == pygame.K_DOWN:
                     keys_pressed["down"] = True
-                elif event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                elif event.key == pygame.K_q:
+                    running = False
+                    break
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
@@ -92,7 +94,6 @@ def run_keyboard_control(direction_callback):
 
 if __name__ == "__main__":
     # Beispiel für die Verwendung von run_keyboard_control
-    def direction_callback(direction):
-        print(f"keyboardcontrol.py sagt {direction}")
-
-    run_keyboard_control(direction_callback)
+    run_keyboard_control(
+        lambda direction: print(f"keyboardcontrol.py sagt {direction}")
+    )

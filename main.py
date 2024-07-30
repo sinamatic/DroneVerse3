@@ -7,7 +7,7 @@ from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_control
 import userinterface
 
-from collisiondetection import run_collision_detection, collision_status
+# from collisiondetection import run_collision_detection, collision_status
 
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
@@ -118,13 +118,13 @@ def send_direction_to_drone(filtered_direction):
         drone_controller.up()
     elif filtered_direction == "down":  # and not collision_status["down"]:
         drone_controller.down()
-    elif filtered_direction == "left" and not collision_status["left"]:
+    elif filtered_direction == "left":  # and not collision_status["left"]:
         drone_controller.left()
-    elif filtered_direction == "right" and not collision_status["right"]:
+    elif filtered_direction == "right":  # and not collision_status["right"]:
         drone_controller.right()
-    elif filtered_direction == "forward" and not collision_status["forward"]:
+    elif filtered_direction == "forward":  # and not collision_status["forward"]:
         drone_controller.forward()
-    elif filtered_direction == "backward" and not collision_status["backward"]:
+    elif filtered_direction == "backward":  # and not collision_status["backward"]:
         drone_controller.backward()
     elif filtered_direction == "stop":
         drone_controller.stop()
@@ -133,27 +133,28 @@ def send_direction_to_drone(filtered_direction):
 
 
 if __name__ == "__main__":
-    chosen_detection, chosen_control = userinterface.get_user_choices()
+    while True:
+        chosen_detection, chosen_control = userinterface.get_user_choices()
 
-    print(f"Chosen Detection: {chosen_detection}")
-    print(f"Chosen Control: {chosen_control}")
+        print(f"Chosen Detection: {chosen_detection}")
+        print(f"Chosen Control: {chosen_control}")
 
-    if chosen_control == "tello":
-        drone_controller = TelloDroneController()
-    elif chosen_control == "quadcopter":
-        drone_controller = QuadcopterDroneController()
-    elif chosen_control == "print":
-        drone_controller = PrintDroneController()
-    else:
-        print("Invalid control method.")
+        if chosen_control == "tello":
+            drone_controller = TelloDroneController()
+        elif chosen_control == "quadcopter":
+            drone_controller = QuadcopterDroneController()
+        elif chosen_control == "print":
+            drone_controller = PrintDroneController()
+        else:
+            print("Invalid control method.")
 
-    if chosen_detection == "keyboard":
-        run_keyboard_control(direction_from_keyboard)
-    elif chosen_detection == "osc":
-        run_osc_detection(direction_from_osc)
-    elif chosen_detection == "gesture":
-        run_gesture_detection(direction_from_gestures)
-    else:
-        print("Invalid detection method.")
+        if chosen_detection == "keyboard":
+            run_keyboard_control(direction_from_keyboard)
+        elif chosen_detection == "osc":
+            run_osc_detection(direction_from_osc)
+        elif chosen_detection == "gesture":
+            run_gesture_detection(direction_from_gestures)
+        else:
+            print("Invalid detection method.")
 
-    run_collision_detection(update_collision_status)
+        # run_collision_detection(update_collision_status)

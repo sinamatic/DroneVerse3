@@ -17,7 +17,7 @@ def run_gesture_detection(direction_callback):
     # direction = "none"
 
     # testing boolean
-    cap = cv2.VideoCapture(1)  # Öffne die Kamera
+    cap = cv2.VideoCapture(0)  # Öffne die Kamera
     _, frame = cap.read()  # Lese ein Frame von der Kamera
 
     # define rois
@@ -25,7 +25,9 @@ def run_gesture_detection(direction_callback):
         frame
     )
 
-    while True:
+    running = True
+
+    while running:
         ret, frame = cap.read()  # Lese ein Frame von der Kamera
         if not ret:
             print("Fehler beim Abrufen des Bildes von der Kamera")
@@ -107,6 +109,7 @@ def run_gesture_detection(direction_callback):
 
     cap.release()  # Gib die Ressourcen frei
     cv2.destroyAllWindows()
+
     # return direction
 
 
