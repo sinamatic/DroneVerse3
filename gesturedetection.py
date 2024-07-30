@@ -24,17 +24,6 @@ def run_gesture_detection(direction_callback):
 
     background = cv2.imread("images/DSC01497_Gestures.jpg")
 
-    # # draw rois
-    # cv2.rectangle(
-    #     frame,
-    #     (roi_middle_left, roi_top),
-    #     (roi_middle_right, roi_bottom),
-    #     (0, 255, 0),
-    #     2,
-    # )
-    # cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
-    # cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
-
     running = True
 
     while running:
@@ -95,18 +84,11 @@ def run_gesture_detection(direction_callback):
                         else:
                             direction = "stop"
 
-                # draw skeleton in white
+                # draw skeleton
                 mp_drawing.draw_landmarks(
-                    frame,
-                    hand_landmarks,
-                    mp_hands.HAND_CONNECTIONS,
-                    mp_drawing.DrawingSpec(
-                        color=(255, 255, 255), thickness=2, circle_radius=2
-                    ),
-                    mp_drawing.DrawingSpec(
-                        color=(255, 255, 255), thickness=2, circle_radius=2
-                    ),
+                    frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
                 )
+
                 direction_callback(direction)
 
         # Zeichne die erkannte Richtung auf dem Frame

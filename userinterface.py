@@ -8,10 +8,11 @@ from PyQt5.QtWidgets import (
     QLabel,
     QRadioButton,
     QButtonGroup,
-    QCheckBox,
+    QSpacerItem,
+    QSizePolicy,
 )
 from PyQt5.QtGui import QPixmap, QPalette, QBrush, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent
 
 
 class UserInterface(QWidget):
@@ -25,11 +26,12 @@ class UserInterface(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Drone Control Interface")
-        self.setGeometry(100, 100, 1920, 1080)  # Querformat Vollbild
+        self.setGeometry(100, 100, 1792, 1120)  # Querformat Vollbild
 
         # Set background image
         self.set_background_image("images/DSC01497.jpg")
 
+        # Main layout with vertical arrangement
         main_layout = QVBoxLayout()
 
         # Set a larger font
@@ -43,7 +45,11 @@ class UserInterface(QWidget):
         header_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(header_label, alignment=Qt.AlignTop)
 
-        ## DETECTION METHODS
+        # Upper part for texts and radio buttons
+        upper_layout = QVBoxLayout()
+        upper_layout.setSpacing(30)  # Space between sections
+
+        # DETECTION METHODS
         detection_section = QVBoxLayout()
         detection_label = QLabel("How do you want to detect?")
         detection_label.setStyleSheet("color: white;")
@@ -99,9 +105,9 @@ class UserInterface(QWidget):
         detection_methods_layout.addLayout(keyboard_section)
 
         detection_section.addLayout(detection_methods_layout)
-        main_layout.addLayout(detection_section)
+        upper_layout.addLayout(detection_section)
 
-        ## CONTROL METHODS
+        # CONTROL METHODS
         control_section = QVBoxLayout()
         control_label = QLabel("What do you want to control?")
         control_label.setStyleSheet("color: white;")
@@ -158,9 +164,15 @@ class UserInterface(QWidget):
 
         control_section.addLayout(control_methods_layout)
 
-        main_layout.addLayout(control_section)
+        upper_layout.addLayout(control_section)
 
-        ## START BUTTONS
+        # Spacer to push buttons to the bottom
+        spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        upper_layout.addItem(spacer)
+
+        main_layout.addLayout(upper_layout)
+
+        # START BUTTONS
         buttons_layout = QHBoxLayout()
         start_button = QPushButton("Start")
         start_button.setFont(font)
@@ -194,12 +206,14 @@ class UserInterface(QWidget):
             self.close()
         else:
             error_dialog = QLabel("Please select both detection and control methods.")
+            error_dialog.setStyleSheet("color: white;")
+            error_dialog.setFont(QFont("Arial", 20))
             error_dialog.show()
 
     def quit_clicked(self):
         self.chosen_detection = None
         self.chosen_control = None
-        self.quit_signal.emit()  # Emit the signal to indicate quit
+        self.quit_signal.emit()
         self.close()
 
 

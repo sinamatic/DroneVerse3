@@ -67,7 +67,7 @@ def run_osc_detection(direction_callback):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",
-        default="192.168.50.152",  # lisas router
+        default="192.168.178.44",  # lisas router
         help="Die IP-Adresse, auf der der OSC-Server lauschen soll",
     )
     parser.add_argument(
@@ -115,13 +115,13 @@ def run_osc_detection(direction_callback):
 
     # Pygame initialisieren und Bildschirm erstellen
     pygame.init()
-    screen = pygame.display.set_mode((1920, 1080))
+    screen = pygame.display.set_mode((1792, 1120))
     pygame.display.set_caption("OSC Detection")
     clock = pygame.time.Clock()
 
     # Hintergrundbild laden und skalieren
     background_image = pygame.image.load("images/DSC01497.jpg")
-    background_image = pygame.transform.scale(background_image, (1920, 1080))
+    background_image = pygame.transform.scale(background_image, (1792, 1120))
 
     # Schriftarten und -größen definieren
     font_large = pygame.font.SysFont("Arial", 80, bold=True)
@@ -148,18 +148,18 @@ def run_osc_detection(direction_callback):
 
         # Überschriften zeichnen
         text_surface = font_large.render("DRONEVERSE", True, (255, 255, 255))
-        text_rect = text_surface.get_rect(center=(960, 65))
+        text_rect = text_surface.get_rect(center=(896, 65))
         screen.blit(text_surface, text_rect)
 
         text_surface = font_small.render(
             "You chose OSC/phone control.", True, (255, 255, 255)
         )
-        text_rect = text_surface.get_rect(center=(960, 150))
+        text_rect = text_surface.get_rect(center=(896, 150))
         screen.blit(text_surface, text_rect)
 
         # OSC-Ausgabe zeichnen
         text_surface = font_large.render(direction.upper(), True, (255, 255, 255))
-        text_rect = text_surface.get_rect(center=(960, 400))
+        text_rect = text_surface.get_rect(center=(896, 400))
         screen.blit(text_surface, text_rect)
 
         instructions = [
@@ -169,7 +169,7 @@ def run_osc_detection(direction_callback):
             "Kippbewegung nach oben / unten = up, down",
             "iPhone liegt still  = stop",
         ]
-        text_y = 780  # Startposition Y für den Textblock
+        text_y = 900  # Startposition Y für den Textblock
         for line in instructions:
             text_surface = font_textblock.render(line, True, (255, 255, 255))
             text_rect = text_surface.get_rect(center=(960, text_y))
