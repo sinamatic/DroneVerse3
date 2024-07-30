@@ -1,6 +1,3 @@
-# Sina Steinmüller
-# Stand: 2024-07-26
-
 import cv2
 import mediapipe as mp
 import math
@@ -14,11 +11,22 @@ hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
 def run_gesture_detection(direction_callback):
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     _, frame = cap.read()  # Lese ein Frame von der Kamera
+
+    # Hintergrundbild laden und Größe anpassen
+    background = cv2.imread("images/DSC01497.jpg")
+    background = cv2.resize(background, (1920, 1080))
 
     # define rois
     height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right = define_rois(
         frame
+    )
+
+    # Zeichne die Regionen ein
+    draw_rois(
+        frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
     )
 
     running = True
@@ -33,10 +41,8 @@ def run_gesture_detection(direction_callback):
         frame = cv2.flip(frame, 1)  # Horizontal spiegeln
         results = hands.process(frame_rgb)
 
-        # Zeichne die Regionen ein
-        draw_rois(
-            frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
-        )
+        # Hintergrundbild einfügen
+        frame = background.copy()
 
         direction = "stop"
 
@@ -85,14 +91,25 @@ def run_gesture_detection(direction_callback):
                         else:
                             direction = "stop"
 
-                # draw skeleton
+                # draw skeleton in white
                 mp_drawing.draw_landmarks(
-                    frame, hand_landmarks, mp_hands.HAND_CONNECTIONS
+                    frame,
+                    hand_landmarks,
+                    mp_hands.HAND_CONNECTIONS,
+                    mp_drawing.DrawingSpec(
+                        color=(255, 255, 255), thickness=2, circle_radius=2
+                    ),
+                    mp_drawing.DrawingSpec(
+                        color=(255, 255, 255), thickness=2, circle_radius=2
+                    ),
                 )
                 direction_callback(direction)
 
         # Zeichne die erkannte Richtung auf dem Frame
         draw_direction_text(frame, direction)
+
+        # Zeichne den Titel "DRONEVERSE" oben zentriert
+        draw_title(frame, "DRONEVERSE")
 
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
@@ -106,13 +123,13 @@ def run_gesture_detection(direction_callback):
 
 
 def draw_direction_text(frame, direction):
-    font = cv2.FONT_HERSHEY_SIMPLEX
+    font = cv2.FONT_HERSHEY_PLAIN
     text = f"Direction: {direction}"
-    font_scale = 1.5
-    font_thickness = 3
+    font_scale = 2.0
+    font_thickness = 6
     text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
-    text_x = 10
-    text_y = text_size[1] + 10
+    text_x = (frame.shape[1] - text_size[0]) // 2  # Zentriere horizontal
+    text_y = (frame.shape[0] + text_size[1]) // 2  # Zentriere vertikal
     cv2.putText(
         frame,
         text,
@@ -125,18 +142,34 @@ def draw_direction_text(frame, direction):
     )
 
 
+def draw_title(frame, title):
+    font = cv2.FONT_HERSHEY_PLAIN
+    font_scale = 3.0
+    font_thickness = 8
+    text_size = cv2.getTextSize(title, font, font_scale, font_thickness)[0]
+    text_x = (frame.shape[1] - text_size[0]) // 2  # Zentriere horizontal
+    text_y = text_size[1] + 20  # Oben mit etwas Abstand
+    cv2.putText(
+        frame,
+        title,
+        (text_x, text_y),
+        font,
+        font_scale,
+        (255, 255, 255),
+        font_thickness,
+        cv2.LINE_AA,
+    )
+
+
 def draw_rois(
     frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
 ):
-    cv2.rectangle(
-        frame,
-        (roi_middle_left, roi_top),
-        (roi_middle_right, roi_bottom),
-        (0, 255, 0),
-        2,
-    )
-    cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
-    cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
+    cv2.line(
+        frame, (0, roi_top), (width, roi_top), (255, 255, 255), 2
+    )  # Horizontale Linie oben
+    cv2.line(
+        frame, (0, roi_bottom), (width, roi_bottom), (255, 255, 255), 2
+    )  # Horizontale Linie unten
 
 
 def define_rois(frame):
