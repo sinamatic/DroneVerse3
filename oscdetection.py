@@ -152,7 +152,7 @@ def run_osc_detection(direction_callback):
         screen.blit(text_surface, text_rect)
 
         text_surface = font_small.render(
-            "You choose OSC/phone control.", True, (255, 255, 255)
+            "You chose OSC/phone control.", True, (255, 255, 255)
         )
         text_rect = text_surface.get_rect(center=(960, 150))
         screen.blit(text_surface, text_rect)

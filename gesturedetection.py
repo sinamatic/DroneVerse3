@@ -11,23 +11,29 @@ hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1)
 # Hauptfunktion zum Abrufen des Webcambildes und zur Erkennung der Handposition
 def run_gesture_detection(direction_callback):
     cap = cv2.VideoCapture(0)  # Öffne die Kamera
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     _, frame = cap.read()  # Lese ein Frame von der Kamera
-
-    # Hintergrundbild laden und Größe anpassen
-    background = cv2.imread("images/DSC01497.jpg")
-    background = cv2.resize(background, (1920, 1080))
+    cv2.namedWindow("Frame", cv2.WND_PROP_FULLSCREEN)  # Erstelle ein Fenster
+    cv2.setWindowProperty(
+        "Frame", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN
+    )  # Setze es auf Vollbild
 
     # define rois
     height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right = define_rois(
         frame
     )
 
-    # Zeichne die Regionen ein
-    draw_rois(
-        frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
-    )
+    background = cv2.imread("images/DSC01497_Gestures.jpg")
+
+    # # draw rois
+    # cv2.rectangle(
+    #     frame,
+    #     (roi_middle_left, roi_top),
+    #     (roi_middle_right, roi_bottom),
+    #     (0, 255, 0),
+    #     2,
+    # )
+    # cv2.rectangle(frame, (0, 0), (width, roi_top), (255, 0, 0), 2)
+    # cv2.rectangle(frame, (0, roi_bottom), (width, height), (255, 0, 0), 2)
 
     running = True
 
@@ -40,8 +46,6 @@ def run_gesture_detection(direction_callback):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.flip(frame, 1)  # Horizontal spiegeln
         results = hands.process(frame_rgb)
-
-        # Hintergrundbild einfügen
         frame = background.copy()
 
         direction = "stop"
@@ -108,9 +112,6 @@ def run_gesture_detection(direction_callback):
         # Zeichne die erkannte Richtung auf dem Frame
         draw_direction_text(frame, direction)
 
-        # Zeichne den Titel "DRONEVERSE" oben zentriert
-        draw_title(frame, "DRONEVERSE")
-
         cv2.imshow("Frame", frame)  # Zeige das Frame mit OpenCV an
         key = cv2.waitKey(1)  # Warte auf eine Tastatureingabe (1 ms Timeout)
 
@@ -123,10 +124,10 @@ def run_gesture_detection(direction_callback):
 
 
 def draw_direction_text(frame, direction):
-    font = cv2.FONT_HERSHEY_PLAIN
-    text = f"Direction: {direction}"
-    font_scale = 2.0
-    font_thickness = 6
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    text = f"{direction}"
+    font_scale = 3
+    font_thickness = 5
     text_size = cv2.getTextSize(text, font, font_scale, font_thickness)[0]
     text_x = (frame.shape[1] - text_size[0]) // 2  # Zentriere horizontal
     text_y = (frame.shape[0] + text_size[1]) // 2  # Zentriere vertikal
@@ -142,36 +143,6 @@ def draw_direction_text(frame, direction):
     )
 
 
-def draw_title(frame, title):
-    font = cv2.FONT_HERSHEY_PLAIN
-    font_scale = 3.0
-    font_thickness = 8
-    text_size = cv2.getTextSize(title, font, font_scale, font_thickness)[0]
-    text_x = (frame.shape[1] - text_size[0]) // 2  # Zentriere horizontal
-    text_y = text_size[1] + 20  # Oben mit etwas Abstand
-    cv2.putText(
-        frame,
-        title,
-        (text_x, text_y),
-        font,
-        font_scale,
-        (255, 255, 255),
-        font_thickness,
-        cv2.LINE_AA,
-    )
-
-
-def draw_rois(
-    frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
-):
-    cv2.line(
-        frame, (0, roi_top), (width, roi_top), (255, 255, 255), 2
-    )  # Horizontale Linie oben
-    cv2.line(
-        frame, (0, roi_bottom), (width, roi_bottom), (255, 255, 255), 2
-    )  # Horizontale Linie unten
-
-
 def define_rois(frame):
     height, width, _ = frame.shape
     roi_top = int(height / 4)
@@ -179,6 +150,12 @@ def define_rois(frame):
     roi_middle_left = int(width / 4)
     roi_middle_right = int(3 * width / 4)
     return height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
+
+
+def draw_rois(
+    frame, height, width, roi_top, roi_bottom, roi_middle_left, roi_middle_right
+):
+    pass
 
 
 if __name__ == "__main__":

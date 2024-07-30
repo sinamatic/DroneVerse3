@@ -4,3 +4,4 @@ python_osc
 pygame
 djitellopy
 pyqt5
+screeninfo
