@@ -1,15 +1,16 @@
 # Sina Steinmüller
 # Stand: 2024-06-30
-""" 
+"""
 This program reads the gyroscope values from the OSC server and calculates the direction of the movement based on the average values of the last 500 values.
 """
-
 
 import argparse
 from collections import deque
 from pythonosc import dispatcher as osc_dispatcher_module
 from pythonosc import osc_server
-import cv2
+import threading
+import pygame
+import sys
 
 # Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
 GYRO_FACTOR = 100.0  # Multiplikationsfaktor für bessere Lesbarkeit
@@ -66,7 +67,6 @@ def run_osc_detection(direction_callback):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--ip",
-        # ip address of the computer, change if necessary
         default=input("Gib die IP-Adresse ein (Standard: 192.168.178.44): ")
         or "192.168.178.44",  # sinas macbook
         help="Die IP-Adresse, auf der der OSC-Server lauschen soll",
@@ -96,17 +96,14 @@ def run_osc_detection(direction_callback):
 
     def gyro_handler_x(unused_addr, gyro_value):
         gyro_x_values.append(gyro_value)
-        # print_gyro_values()
         update_direction()
 
     def gyro_handler_y(unused_addr, gyro_value):
         gyro_y_values.append(gyro_value)
-        # print_gyro_values()
         update_direction()
 
     def gyro_handler_z(unused_addr, gyro_value):
         gyro_z_values.append(gyro_value)
-        # print_gyro_values()
         update_direction()
 
     osc_dispatcher = osc_dispatcher_module.Dispatcher()
@@ -117,10 +114,38 @@ def run_osc_detection(direction_callback):
     server = osc_server.ThreadingOSCUDPServer((args.ip, args.port), osc_dispatcher)
     print(f"OSC-Server gestartet auf {args.ip}:{args.port}")
 
-    server.serve_forever()
+    # Pygame initialisieren und Bildschirm erstellen
+    pygame.init()
+    screen = pygame.display.set_mode((640, 480))
+    pygame.display.set_caption("OSC Detection")
+    clock = pygame.time.Clock()
+
+    # Start the server in a separate thread
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.start()
+
+    # Überwache die Tasteneingabe für das Beenden des Programms
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    running = False
+                    break
+
+        screen.fill((255, 255, 255))
+        pygame.display.flip()
+        clock.tick(60)
+
+    # Stoppe den OSC-Server und beende das Programm
+    print("Beende OSC-Detection...")
+    server.shutdown()
+    server_thread.join()
+    pygame.quit()
+    # sys.exit()
 
 
 if __name__ == "__main__":
-
-    # callback funktion
     run_osc_detection(lambda direction: print(f"oscdetection.py sagt {direction}"))
