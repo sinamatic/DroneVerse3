@@ -6,9 +6,6 @@ This program uses Pygame to detect keyboard input and control the drone based on
 """
 import pygame
 import sys
-import pygame
-import sys
-
 
 keys_pressed = {
     "up": False,

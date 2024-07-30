@@ -227,7 +227,8 @@ class UserInterface(QWidget):
     def quit_clicked(self):
         self.chosen_detection = None
         self.chosen_control = None
-        QApplication.instance().quit()
+        self.quit_signal.emit()  # Emit the signal to indicate quit
+        self.close()
 
 
 def get_user_choices():
