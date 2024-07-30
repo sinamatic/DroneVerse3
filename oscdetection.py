@@ -127,6 +127,7 @@ def run_osc_detection(direction_callback):
     font_large = pygame.font.SysFont("Arial", 80, bold=True)
     font_medium = pygame.font.SysFont("Arial", 72)
     font_small = pygame.font.SysFont("Arial", 48)
+    font_textblock = pygame.font.SysFont("Arial", 24)
 
     # Start the server in a separate thread
     server_thread = threading.Thread(target=server.serve_forever)
@@ -160,6 +161,20 @@ def run_osc_detection(direction_callback):
         text_surface = font_large.render(direction.upper(), True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(960, 400))
         screen.blit(text_surface, text_rect)
+
+        instructions = [
+            "iPhone als Fernbedienung: Display schaut nach oben, Kamera nach links, Homebutton nach rechts.",
+            "Drehung vom 45° nach rechts/links = forward, backward",
+            "Kippbewegung nach links / rechts = left, right",
+            "Kippbewegung nach oben / unten = up, down",
+            "iPhone liegt still  = stop",
+        ]
+        text_y = 780  # Startposition Y für den Textblock
+        for line in instructions:
+            text_surface = font_textblock.render(line, True, (255, 255, 255))
+            text_rect = text_surface.get_rect(center=(960, text_y))
+            screen.blit(text_surface, text_rect)
+            text_y += 30  # Abstand zwischen den Zeilen
 
         pygame.display.flip()
         clock.tick(60)

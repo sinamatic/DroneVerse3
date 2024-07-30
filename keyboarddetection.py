@@ -18,13 +18,24 @@ keys_pressed = {
 }
 
 
-def run_keyboard_control(direction_callback):
+def run_keyboard_detection(direction_callback):
     pygame.init()
-    screen = pygame.display.set_mode((640, 480))
-    pygame.display.set_caption("Drone Control")
+    screen = pygame.display.set_mode((1920, 1080))
+    pygame.display.set_caption("Keyboard Detection")
     clock = pygame.time.Clock()
 
+    # Hintergrundbild laden und skalieren
+    background_image = pygame.image.load("images/DSC01497.jpg")
+    background_image = pygame.transform.scale(background_image, (1920, 1080))
+
+    # Schriftarten und -größen definieren
+    font_large = pygame.font.SysFont("Arial", 80, bold=True)
+    font_small = pygame.font.SysFont("Arial", 48)
+    font_textblock = pygame.font.SysFont("Arial", 24)
+
     running = True
+    direction = "none"
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -51,46 +62,78 @@ def run_keyboard_control(direction_callback):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     keys_pressed["forward"] = False
-                    direction_callback("stop")
+                    direction = "stop"
                 elif event.key == pygame.K_s:
                     keys_pressed["backward"] = False
-                    direction_callback("stop")
+                    direction = "stop"
                 elif event.key == pygame.K_a:
                     keys_pressed["left"] = False
-                    direction_callback("stop")
+                    direction = "stop"
                 elif event.key == pygame.K_d:
                     keys_pressed["right"] = False
-                    direction_callback("stop")
+                    direction = "stop"
                 elif event.key == pygame.K_UP:
                     keys_pressed["up"] = False
-                    direction_callback("stop")
+                    direction = "stop"
                 elif event.key == pygame.K_DOWN:
                     keys_pressed["down"] = False
-                    direction_callback("stop")
+                    direction = "stop"
 
         try:
             if keys_pressed["up"]:
-                direction_callback("up")
+                direction = "up"
             if keys_pressed["down"]:
-                direction_callback("down")
+                direction = "down"
             if keys_pressed["left"]:
-                direction_callback("left")
+                direction = "left"
             if keys_pressed["right"]:
-                direction_callback("right")
+                direction = "right"
             if keys_pressed["forward"]:
-                direction_callback("forward")
+                direction = "forward"
             if keys_pressed["backward"]:
-                direction_callback("backward")
+                direction = "backward"
+
         except Exception as e:
             print(f"Ein Fehler ist aufgetreten: {e}")
 
-        screen.fill((255, 255, 255))
+        screen.blit(background_image, (0, 0))
+
+        # Überschriften zeichnen
+        text_surface = font_large.render("DRONEVERSE", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(960, 65))
+        screen.blit(text_surface, text_rect)
+
+        text_surface = font_small.render(
+            "You choose keyboard control.", True, (255, 255, 255)
+        )
+        text_rect = text_surface.get_rect(center=(960, 150))
+        screen.blit(text_surface, text_rect)
+
+        # Tastendruck-Ausgabe zeichnen
+        text_surface = font_large.render(direction.upper(), True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(960, 400))
+        screen.blit(text_surface, text_rect)
+
+        # Anweisungs-Textblock zeichnen
+        instructions = [
+            "Drücke und halte folgende Tasten, damit die Drohne in die gewünschte Richtung fliegt:",
+            "w, s = forward, backward",
+            "a, d = left, right",
+            "Pfeiltasten ↑, ↓  = up, down",
+            "no keyinput  = stop",
+        ]
+        text_y = 780  # Startposition Y für den Textblock
+        for line in instructions:
+            text_surface = font_textblock.render(line, True, (255, 255, 255))
+            text_rect = text_surface.get_rect(center=(960, text_y))
+            screen.blit(text_surface, text_rect)
+            text_y += 30  # Abstand zwischen den Zeilen
+
         pygame.display.flip()
         clock.tick(60)
 
 
 if __name__ == "__main__":
-    # Beispiel für die Verwendung von run_keyboard_control
-    run_keyboard_control(
-        lambda direction: print(f"keyboardcontrol.py sagt {direction}")
+    run_keyboard_detection(
+        lambda direction: print(f"keyboarddetection.py sagt {direction}")
     )

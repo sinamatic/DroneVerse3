@@ -4,7 +4,7 @@ from collections import defaultdict, Counter
 
 from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
-from keyboarddetection import run_keyboard_control
+from keyboarddetection import run_keyboard_detection
 import userinterface
 
 # from collisiondetection import run_collision_detection, collision_status
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             print("Invalid control method.")
 
         if chosen_detection == "keyboard":
-            run_keyboard_control(direction_from_keyboard)
+            run_keyboard_detection(direction_from_keyboard)
         elif chosen_detection == "osc":
             run_osc_detection(direction_from_osc)
         elif chosen_detection == "gesture":
