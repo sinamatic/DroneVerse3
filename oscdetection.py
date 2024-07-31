@@ -15,6 +15,7 @@ import sys
 # Faktoren zur Anpassung der Gyro-Werte für bessere Sichtbarkeit der Neigung
 GYRO_FACTOR = 100.0  # Multiplikationsfaktor für bessere Lesbarkeit
 HISTORY_SIZE = 500  # Anzahl der Werte zur Berechnung der Richtung
+THRESHOLD = 0.1  # Schwellenwert für die Erkennung von Bewegungen
 
 
 # Funktion zur Berechnung der Richtung basierend auf Durchschnittswerten
@@ -37,6 +38,10 @@ def determine_direction(gyro_x_values, gyro_y_values, gyro_z_values):
 
     # Bestimme die größte durchschnittliche absolute Bewegung
     max_value = max(abs(avg_x), abs(avg_y), abs(avg_z))
+
+    # Vergleiche mit dem Schwellenwert
+    if max_value < THRESHOLD:
+        return "stop"
 
     # Bestimme die Richtung basierend auf dem größten Wert
     if max_value == abs(avg_x):
@@ -125,7 +130,6 @@ def run_osc_detection(direction_callback):
 
     # Schriftarten und -größen definieren
     font_large = pygame.font.SysFont("Arial", 80, bold=True)
-    font_medium = pygame.font.SysFont("Arial", 72)
     font_small = pygame.font.SysFont("Arial", 48)
     font_textblock = pygame.font.SysFont("Arial", 24)
 
