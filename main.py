@@ -133,6 +133,10 @@ def send_direction_to_drone(filtered_direction):
 
 
 if __name__ == "__main__":
+
+    if chosen_control == "tello" and drone_controller:
+        drone_controller.land()
+
     while True:
         chosen_detection, chosen_control = userinterface.get_user_choices()
 
@@ -156,8 +160,5 @@ if __name__ == "__main__":
             run_gesture_detection(direction_from_gestures)
         else:
             print("Invalid detection method.")
-
-        if chosen_control == "tello" and drone_controller:
-            drone_controller.land()
 
     # run_collision_detection(update_collision_status)
