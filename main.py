@@ -77,20 +77,23 @@ def direction_from_osc(direction):
 
 
 def direction_from_keyboard(direction):
-    global signal_counts, last_output_time
 
-    current_time, current_second = set_logging_info()
+    send_direction_to_drone(direction)
 
-    directions_keyboard.append(direction)
-    filtered_direction = filter_direction(directions_keyboard, max_size_keyboard)
-    if filtered_direction is not None:
-        logging.info(
-            f"{signal_counts[current_second]} Chosen Control: Keyboard \t Direction from Control: {direction}"
-        )
-        send_direction_to_drone(direction)
+    # global signal_counts, last_output_time
 
-    if current_time - last_output_time >= 60:
-        last_output_time = current_time
+    # current_time, current_second = set_logging_info()
+
+    # directions_keyboard.append(direction)
+    # filtered_direction = filter_direction(directions_keyboard, max_size_keyboard)
+    # if filtered_direction is not None:
+    #     logging.info(
+    #         f"{signal_counts[current_second]} Chosen Control: Keyboard \t Direction from Control: {direction}"
+    #     )
+    #     send_direction_to_drone(direction)
+
+    # if current_time - last_output_time >= 60:
+    #     last_output_time = current_time
 
 
 def set_logging_info():
@@ -135,9 +138,8 @@ def send_direction_to_drone(filtered_direction):
         stop_counter = 0
     elif filtered_direction == "stop":
         drone_controller.stop()
-        print("stop")
         stop_counter = stop_counter + 1
-        if stop_counter == 15:
+        if stop_counter == 2:
             drone_controller.land()
 
     else:
@@ -171,7 +173,7 @@ if __name__ == "__main__":
         else:
             print("Invalid detection method.")
 
-        # if chosen_control == "tello" and drone_controller:
-        #     drone_controller.land()
+        if chosen_control == "tello" and drone_controller:
+            drone_controller.land()
 
     # run_collision_detection(update_collision_status)
