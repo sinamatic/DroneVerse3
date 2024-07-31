@@ -112,30 +112,39 @@ def send_direction_to_drone(filtered_direction):
     drone_controller.speed_up_down = 0
     drone_controller.speed_forward_back = 0
     drone_controller.yaw_speed = 0
+    stop_counter = 0
 
     # Überprüfen Sie, ob eine Kollision in der gewünschten Richtung vorliegt
     if filtered_direction == "up":  # and not collision_status["up"]:
         drone_controller.up()
+        stop_counter = 0
     elif filtered_direction == "down":  # and not collision_status["down"]:
         drone_controller.down()
+        stop_counter = 0
     elif filtered_direction == "left":  # and not collision_status["left"]:
         drone_controller.left()
+        stop_counter = 0
     elif filtered_direction == "right":  # and not collision_status["right"]:
         drone_controller.right()
+        stop_counter = 0
     elif filtered_direction == "forward":  # and not collision_status["forward"]:
         drone_controller.forward()
+        stop_counter = 0
     elif filtered_direction == "backward":  # and not collision_status["backward"]:
         drone_controller.backward()
+        stop_counter = 0
     elif filtered_direction == "stop":
         drone_controller.stop()
+        print("stop")
+        stop_counter = stop_counter + 1
+        if stop_counter == 15:
+            drone_controller.land()
+
     else:
         print(f"Invalid direction or collision detected: {filtered_direction}")
 
 
 if __name__ == "__main__":
-
-    if chosen_control == "tello" and drone_controller:
-        drone_controller.land()
 
     while True:
         chosen_detection, chosen_control = userinterface.get_user_choices()
@@ -145,6 +154,7 @@ if __name__ == "__main__":
 
         if chosen_control == "tello":
             drone_controller = TelloDroneController()
+
         elif chosen_control == "quadcopter":
             drone_controller = QuadcopterDroneController()
         elif chosen_control == "print":
@@ -160,5 +170,8 @@ if __name__ == "__main__":
             run_gesture_detection(direction_from_gestures)
         else:
             print("Invalid detection method.")
+
+        # if chosen_control == "tello" and drone_controller:
+        #     drone_controller.land()
 
     # run_collision_detection(update_collision_status)
