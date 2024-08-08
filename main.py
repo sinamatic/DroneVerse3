@@ -1,3 +1,6 @@
+# Sina Steinmüller
+# Stand: 2024-06-30
+
 import logging
 import time
 from collections import defaultdict, Counter
@@ -5,6 +8,7 @@ from collections import defaultdict, Counter
 from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_detection
+import receiveCollission
 import userinterface
 
 # from collisiondetection import run_collision_detection, collision_status
@@ -31,6 +35,11 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt="%H:%M:%S",
 )
+
+
+def get_collison():
+    collision = receiveCollission.collision
+    return collision
 
 
 def filter_direction(directions, max_size):
@@ -118,13 +127,21 @@ def send_direction_to_drone(filtered_direction):
         drone_controller.up()
     elif filtered_direction == "down":  # and not collision_status["down"]:
         drone_controller.down()
-    elif filtered_direction == "left":  # and not collision_status["left"]:
+    elif (
+        filtered_direction == "left" and not get_collison() == "left"
+    ):  # and not collision_status["left"]:
         drone_controller.left()
-    elif filtered_direction == "right":  # and not collision_status["right"]:
+    elif (
+        filtered_direction == "right" and not get_collison() == "right"
+    ):  # and not collision_status["right"]:
         drone_controller.right()
-    elif filtered_direction == "forward":  # and not collision_status["forward"]:
+    elif (
+        filtered_direction == "forward" and not get_collison() == "forward"
+    ):  # and not collision_status["forward"]:
         drone_controller.forward()
-    elif filtered_direction == "backward":  # and not collision_status["backward"]:
+    elif (
+        filtered_direction == "backward" and not get_collison() == "backward"
+    ):  # and not collision_status["backward"]:
         drone_controller.backward()
     elif filtered_direction == "stop":
         drone_controller.stop()
@@ -133,9 +150,6 @@ def send_direction_to_drone(filtered_direction):
 
 
 if __name__ == "__main__":
-
-    if chosen_control == "tello" and drone_controller:
-        drone_controller.land()
 
     while True:
         chosen_detection, chosen_control = userinterface.get_user_choices()
@@ -160,5 +174,8 @@ if __name__ == "__main__":
             run_gesture_detection(direction_from_gestures)
         else:
             print("Invalid detection method.")
+
+        # if chosen_control == "tello" and drone_controller:
+        #     drone_controller.land()
 
     # run_collision_detection(update_collision_status)
