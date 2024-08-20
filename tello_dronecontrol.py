@@ -1,10 +1,3 @@
-# Maximilian Richter
-# Sina Steinmüller
-# Stand: 2024-07-26
-""" 
-This program provides a simple Tello drone controller for demonstration purposes.
-Needs to be updated, not tested yet.
-"""
 from djitellopy import Tello, tello
 import time
 
@@ -12,24 +5,22 @@ import time
 class TelloDroneController:
 
     def __init__(self):
-        # self.drone = tello.Tello("192.168.50.102")
+
         self.drone = Tello()
         print("Drone initialized.")
 
-        # Initialisiere Geschwindigkeiten
-        self.speed_left_right = 0  # Links/Rechts
-        self.speed_up_down = 0  # Auf/Ab
-        self.speed_forward_back = 0  # Vorwärts/Rückwärts
-        self.yaw_speed = 0  # Drehung
+        # Geschwindigkeiten der Drohne werden auf 0 initialisiert
+        self.speed_left_right = 0
+        self.speed_up_down = 0
+        self.speed_forward_back = 0
+        self.yaw_speed = 0
 
         self.drone.connect()
         print("Drone connected.")
-        self.drone.streamoff()
-        self.drone.streamon()
 
-        self.takeoff()  # Drohne hebt ab, sobald die Instanz erstellt wird
+        self.takeoff()  # Drohne hebt ab
 
-        self.speed = 20  # Geschwindigkeit der Drohne
+        self.speed = 30  # Geschwindigkeit der Drohne
 
     def update_movement(self):
         self.drone.send_rc_control(
