@@ -10,12 +10,12 @@ Alle Medien wie Fotos, Videos sowie der Zwischenbericht findet sich hier: https:
 
 # Mitwirkende
 
-Sina Steinmüller
-Tobias Schwarz
-Maximilian Richter
-Lisa Berbig
-Anusha Kanagarasa
-Katharina Hölzl
+- Sina Steinmüller
+- Tobias Schwarz
+- Maximilian Richter
+- Lisa Berbig
+- Anusha Kanagarasa
+- Katharina Hölzl
 
 Betreuer: Prof. Dr. (USA) Ralph Lano
 Für weitere Fragen: steinmuellersi89050@th-nuernberg.de

@@ -1,3 +1,6 @@
+// change this to platformio project or use arduino ide
+#include <Arduino.h>
+
 long duration;
 int distance;
 
