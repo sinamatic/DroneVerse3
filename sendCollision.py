@@ -17,5 +17,5 @@ def run_send_collsion(danger):
     print(f"Message '{danger}' sent to {ip}:{port}")
 
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     run_send_collsion()

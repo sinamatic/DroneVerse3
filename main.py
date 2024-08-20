@@ -8,19 +8,23 @@ from gesturedetection import run_gesture_detection
 from oscdetection import run_osc_detection
 from keyboarddetection import run_keyboard_detection
 
-# import receiveCollission
+import receiveCollision
 import userinterface
 
-# from collisiondetection import run_collision_detection, collision_status
+from collisiondetection import run_collision_detection, collision_status
 
 from print_dronecontrol import PrintDroneController
 from tello_dronecontrol import TelloDroneController
 
-# from quadcopter_dronecontrol import QuadcopterDroneController
+quadcopter_connected = False
+if quadcopter_connected:
+    from quadcopter_dronecontrol import QuadcopterDroneController
+
 
 chosen_detection = None
 chosen_control = None
 drone_controller = None
+
 
 max_size_gestures = 15
 max_size_osc = 300
@@ -38,9 +42,9 @@ logging.basicConfig(
 )
 
 
-# def get_collison():
-#     collision = receiveCollission.collision
-#     return collision
+def get_collison():
+    collision = receiveCollision.collision
+    return collision
 
 
 def filter_direction(directions, max_size):
@@ -129,17 +133,17 @@ def send_direction_to_drone(filtered_direction):
     elif filtered_direction == "down":
         drone_controller.down()
     elif (
-        filtered_direction == "left"  # and not get_collison() == "left"
+        filtered_direction == "left" and not get_collison() == "left"
     ):  # and not collision_status["left"]:
         drone_controller.left()
     elif (
-        filtered_direction == "right"  # and not get_collison() == "right"
+        filtered_direction == "right" and not get_collison() == "right"
     ):  # and not collision_status["right"]:
         drone_controller.right()
-    elif filtered_direction == "forward":  # and not get_collison() == "forward":
+    elif filtered_direction == "forward" and not get_collison() == "forward":
 
         drone_controller.forward()
-    elif filtered_direction == "backward":  # and not get_collison() == "backward":
+    elif filtered_direction == "backward" and not get_collison() == "backward":
 
         drone_controller.backward()
     elif filtered_direction == "stop":
@@ -158,8 +162,14 @@ if __name__ == "__main__":
 
         if chosen_control == "tello":
             drone_controller = TelloDroneController()
-        # elif chosen_control == "quadcopter":
-        #     drone_controller = QuadcopterDroneController()
+        elif chosen_control == "quadcopter":
+            if quadcopter_connected:
+                drone_controller = QuadcopterDroneController()
+            else:
+                print(
+                    f"Chosen Detection: {chosen_detection}. Error, please connect quadcopter and set 'quadcopter_connected' to True."
+                )
+                break
         elif chosen_control == "print":
             drone_controller = PrintDroneController()
         else:
@@ -174,7 +184,4 @@ if __name__ == "__main__":
         else:
             print("Invalid detection method.")
 
-        # if chosen_control == "tello" and drone_controller:
-        #     drone_controller.land()
-
-    # run_collision_detection(update_collision_status)
+        run_collision_detection(update_collision_status)
