@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import sendCollision
 
 collision_status = {"forward": False, "backward": False, "left": False, "right": False}
 
@@ -13,17 +14,32 @@ def crop_sides(image, crop_fraction):
     return cropped_image
 
 
-def run_collision_detection(collision_callback):
-    margin_size = 10
+def crop_image(image, crop_height, crop_width):
+    height, width = image.shape[:2]
+
+    start_y = (height - crop_height) // 2
+    end_y = start_y + crop_height
+    start_x = (width - crop_width) // 2
+    end_x = start_x + crop_width
+
+    cropped_image = image[start_y:end_y, start_x:end_x]
+    return cropped_image
+
+
+def run_collision_detection():
+    # Randbereich in px
+    margin_size = 100
+
     cap = cv2.VideoCapture(0)
     old_frame = None
 
     while True:
         ret, frame = cap.read()
         cropped_frame = crop_sides(frame, 0.25)
+        cropped = crop_image(cropped_frame, 700, 600)
 
         if ret:
-            gray = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
 
             if old_frame is not None:
                 diff = cv2.absdiff(old_frame, gray)
@@ -35,24 +51,34 @@ def run_collision_detection(collision_callback):
                 left_margin = bin_diff[:, :margin_size]
                 right_margin = bin_diff[:, -margin_size:]
 
-                collision_status["forward"] = np.any(top_margin == 255)
-                collision_status["backward"] = np.any(bottom_margin == 255)
-                collision_status["left"] = np.any(left_margin == 255)
-                collision_status["right"] = np.any(right_margin == 255)
+                top_has_white = np.any(top_margin == 255)
+                bottom_has_white = np.any(bottom_margin == 255)
+                left_has_white = np.any(left_margin == 255)
+                right_has_white = np.any(right_margin == 255)
 
-                if collision_status["forward"]:
+                if top_has_white:
                     print("Gefahrbereich vorne")
-                if collision_status["backward"]:
+                    sendCollision.run_send_collsion("forward")
+
+                elif bottom_has_white:
                     print("Gefahrbereich hinten")
-                if collision_status["left"]:
+                    sendCollision.run_send_collsion("backward")
+
+                elif left_has_white:
                     print("Gefahrbereich links")
-                if collision_status["right"]:
+                    sendCollision.run_send_collsion("left")
+
+                elif right_has_white:
                     print("Gefahrbereich rechts")
+                    sendCollision.run_send_collsion("right")
 
-                if not any(collision_status.values()):
+                elif not (
+                    top_has_white
+                    or bottom_has_white
+                    or left_has_white
+                    or right_has_white
+                ):
                     print("Sicherer Bereich")
-
-                collision_callback(collision_status)
 
             old_frame = gray
 
@@ -66,5 +92,5 @@ def run_collision_detection(collision_callback):
     cv2.destroyAllWindows()
 
 
-if __name__ == "__main__":
-    run_collision_detection(lambda status: print(f"collision_status: {status}"))
+if _name_ == "_main_":
+    run_collision_detection()

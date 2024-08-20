@@ -1,44 +1,44 @@
 # DroneVerse
 
-# ToDo
+Mit dem hier bereitgestellten Code ist es möglich, verschiedene Drohennsteuerungen mit verschiedenen Drohnen zu kombinieren und durch einen Hindernis-Parcours zu navigieren. Über ein UserInterface wird ausgewählt, welche Steuerung man haben möchte: Gestenerkennung, Handysteuerung (Ausrichtung des Handys im Raum) oder Tastatursteuerung. Außerdem kann man aktuell zwischen Tello Drohnen und Quadkoptern wählen. Für die Quadkopter ist ein eigener Aufbau nötig.
 
-- Abbruchfunktionen mit Taste Q in Keyboarddetection und OSC Detection einbauen
-- ggf. Gestenerkennung ohne Regionen, nur mit Fingern (bisher gescheitert)
-- Userinterface überarbeiten
-  - Countdown und HighScore einbauen, ggf. auf neuen Screen, sodass nach Start der Screen wechselt und man dann "Begin Game" oder so drücken kann
-  - EndGame sollte es auch geben, als Button (für Notfälle) und Sensorgesteuert, hierbei sollte dann die Drohne landen, die Zeit stoppen, der Name der Person in die Highscore Tabelle eingetragen werden und das Userinterface zurück zum Startbildschirm (chose detection) gehen
-  - Highscore Tabelle sortiert sich nach kürzester Zeit
-  - Sollte auch Art der Steuerung enthalten (Gesten, Handy oder Tastatur)
-  - IP-Adress Eingabe bei "OSC detection" einbauen
-  - einen "Regionen anzeigen" button als zusätzliche Option bei der Gestenerkennung einbauen, um die Linien im Bild ein- oder auszuschalten
-  - einen "Skelett anzeigen" button als zusätzliche Option bei der Gestenerkennung einbauen, um das Handskellett anzuzeigen oder auszuschalten
-  - einen "Zeige Video" button einbauen, der das Kamerabild ein- oder ausschaltet
-- Gestenerkennung.py
-  - True/False bool "show_video", "show_handskeleton", "show_rois" einbauen
-- Sensor für Endzeiterfassung integrieren, hierfür Endzeit als Pythonausgabe übergeben
-- Datenmengen vereinheitlichen, OSC Nachrichten deutlich mehr (anzahl pro Sekunde) als zB Gesten Daten, so filtern dass für Drohne passt
-  - rausfinden wie viele Signale pro Sek die Drohne verarbeiten kann
-- Klassendiagramm überarbeiten eventuell
-- Neutrale Geste damit drohne sich nicht bewegt
+Das Projekt wurde im Rahmen des Studiums Media Engineering der Technischen Hochschule Nürnberg im 5. und 6. Semester erstellt. Die Aufgabenstellung war "Interaktive Drohnensteuerung mit Luftballons".
+
+Eine detaillierte Beschreibung des Projekts findet sich im Projektbericht: https://faubox.rrze.uni-erlangen.de/getlink/fi8aWHq5cp2sDt69WiMZJu/Projektbericht_DroneVerse_2.pdf
+
+Alle Medien wie Fotos, Videos sowie der Zwischenbericht findet sich hier: https://faubox.rrze.uni-erlangen.de/getlink/fiRL1DiZmdD7DsQrgofr74/
+
+# Mitwirkende
+
+Sina Steinmüller
+Tobias Schwarz
+Maximilian Richter
+Lisa Berbig
+Anusha Kanagarasa
+Katharina Hölzl
+
+Betreuer: Prof. Dr. (USA) Ralph Lano
+Für weitere Fragen: steinmuellersi89050@th-nuernberg.de
 
 # Main.py
 
 Das Skript main.py dient als zentrale Steuerungseinheit für ein Drohnenkontrollsystem. Es integriert verschiedene Module zur Erkennung von Steuerbefehlen sowie zur Kontrolle der Drohne. Im Folgenden wird die Funktionsweise des Skripts erläutert:
 
-![Beschreibung des Bildes](images/Klassendiagramm.png)
+![Beschreibung des Bildes](images/Softwarearchitektur.png)
 
 ## Importieren der Erkennungs- und Kontrollmodule:
 
 - run_gesture_detection: Funktion zur Erkennung von Gesten.
 - run_osc_detection: Funktion zur Erkennung von Open Sound Control (OSC) Signalen.
-- run_keyboard_control: Funktion zur Erkennung von Tastatureingaben.
+- run_keyboard_detection: Funktion zur Erkennung von Tastatureingaben.
 - PrintDroneController: Controller zur Ausgabe der Steuerbefehle auf der Konsole.
 - TelloDroneController: Controller zur Steuerung einer Tello-Drohne.
+- QuadkopterDroneController: Controller zur Steuerung einer Tello-Drohne.
 
 ## Globale Variablen zur Auswahl der Erkennungs- und Kontrollmethode:
 
 - chosen_detection: Bestimmt, welche Erkennungsmethode verwendet wird. Mögliche Werte sind "gestures", "osc", und "keyboard".
-- chosen_control: Bestimmt, welcher Controller verwendet wird. Mögliche Werte sind "print" und "tello".
+- chosen_control: Bestimmt, welcher Controller verwendet wird. Mögliche Werte sind "print", "tello" und "quadkopter".
 
 ## Funktionen zur Verarbeitung der Erkennungsergebnisse:
 
@@ -52,9 +52,8 @@ Das Skript main.py dient als zentrale Steuerungseinheit für ein Drohnenkontroll
 
 ## Hauptprogramm:
 
-Das Skript startet eine Benutzeroberfläche (to do) und initialisiert die ausgewählte Erkennungsmethode (gesture, osc, oder keyboard).
+Das Skript startet eine Benutzeroberfläche und initialisiert die ausgewählte Erkennungsmethode (gesture, osc, oder keyboard).
 Je nach Auswahl wird die entsprechende Erkennungsfunktion gestartet, welche die Richtungsbefehle an die zuvor definierten Verarbeitungsfunktionen weiterleitet.
-Dieses Skript ermöglicht eine flexible Steuerung einer Drohne, indem verschiedene Eingabemethoden und Steuerungsmechanismen kombiniert werden. Es ist leicht anpassbar, indem einfach die Werte der globalen Variablen chosen_detection und chosen_control geändert werden.
 
 # gesturedetection.py
 
@@ -159,10 +158,6 @@ x: links / rechts
 y: hoch / runter
 z: vorwärts / rückwärts
 
-### Installation auf Android
-
-- to do
-
 ### Steuerung
 
 iPhone mit Display nach oben halten, Kamera auf der Linken Seite, Homebutton auf der rechten Seite.
@@ -178,11 +173,18 @@ iPhone mit Display nach oben halten, Kamera auf der Linken Seite, Homebutton auf
 
 # print_dronecontrol.py
 
-Simuliert die Drohnensteuerung mittels Printausgaben, da ich keine Drohne zum tatsächlichen testen zur Verfügung habe.
+Simuliert die Drohnensteuerung mittels Printausgaben, hauptsächlich verwendet zum Testen verschiedener Funktionen und zum erlernen der Steuerung.
 
 # tello_dronecontrol.py
 
-Steuert die DJI Tello drohne entsprechend der gewählten Detection. Muss noch korrekt implementiert werden.
+Steuert die DJI Tello drohne entsprechend der gewählten Detection.
+
+# Parcours
+
+highscore.py
+ultrasonicsensorTimer.cpp
+
+Dient dazu, eine Zeitmessung im Hindernisparcours zu erstellen. Hierfür wird mit dem Ultraschallsensor der die Zeit gemessen, die der Spieler gebraucht hat. Die erkannte Zeit wird ins highscore.py Skript eingetragen und zeigt die Bestenliste.
 
 # Installation
 
@@ -195,7 +197,3 @@ pip install -r requirements.txt
 ```
 
 # ChangeLog
-
-## 01.07.24:
-
-- Updated Readme
