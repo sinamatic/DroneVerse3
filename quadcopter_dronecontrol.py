@@ -19,6 +19,7 @@ print("Connecting to Telnet server...")
 tn = telnetlib.Telnet(HOST, PORT)  # Verbindung zum Telnet-Server herstellen
 if not telnetlib.Telnet:
     print("Telnet-Verbindung konnte nicht hergestellt werden.")
+testing = False
 
 
 class QuadcopterDroneController:
