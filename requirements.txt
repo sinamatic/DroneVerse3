@@ -5,3 +5,4 @@ pygame
 djitellopy
 pyqt5
 screeninfo
+serial
