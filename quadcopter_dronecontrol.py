@@ -13,14 +13,11 @@ Needs to be updated, not tested yet.
 import time
 import telnetlib
 
-testing = True
-
-HOST = "192.168.43.133"  # Ersetze dies mit der Adresse deines Telnet-Servers
-PORT = 23  # Standard-Telnet-Port, ändere dies entsprechend deiner Konfiguration
-if not testing:
-    print("Connecting to Telnet server...")
-    tn = telnetlib.Telnet(HOST, PORT) # Verbindung zum Telnet-Server herstellen
-    if not telnetlib.Telnet: print("Telnet-Verbindung konnte nicht hergestellt werden.")
+HOST = "192.168.43.133"  # Adresse des Telnet-Servers
+PORT = 23  # Standard-Telnet-Port
+print("Connecting to Telnet server...")
+tn = telnetlib.Telnet(HOST, PORT) # Verbindung zum Telnet-Server herstellen
+if not telnetlib.Telnet: print("Telnet-Verbindung konnte nicht hergestellt werden.")
 
 
 class QuadcopterDroneController:
@@ -45,12 +42,13 @@ class QuadcopterDroneController:
         self.speed_up_down,
         self.yaw_speed
 
-
-    def up(self):
+    # not in use
+    def up(self): 
         self.speed_up_down = self.speed
         self.update_movement()
         print("Tello: Up")
 
+    # not in use
     def down(self):
         self.speed_up_down = -self.speed
         self.update_movement()
@@ -68,6 +66,7 @@ class QuadcopterDroneController:
         if not testing: tn.write("w".encode('ascii') + b"\n") 
         print("Quad: Forward")
 
+    # hier "nach oben" statt "zurück"
     def backward(self):
         if not testing: tn.write("s".encode('ascii') + b"\n") 
         print("Quad: Backward")
@@ -87,12 +86,14 @@ class QuadcopterDroneController:
         if not testing: tn.write("x".encode('ascii') + b"\n")
         print("Quad: Stop")
 
-    def yaw_left(self):
+    # not in use
+    def yaw_left(self): 
         self.yaw_speed = -self.speed
         self.update_movement()
         print("Tello: Yaw Left")
 
-    def yaw_right(self):
+    # not in use
+    def yaw_right(self): 
         self.yaw_speed = self.speed
         self.update_movement()
         print("Tello: Yaw Right")
