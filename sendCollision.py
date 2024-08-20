@@ -1,3 +1,5 @@
+# Author: Lisa Berbig
+
 from pythonosc.udp_client import SimpleUDPClient
 
 

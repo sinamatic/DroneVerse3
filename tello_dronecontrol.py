@@ -1,3 +1,5 @@
+# Author: Maximilian Richter, Sina Steinmüller
+
 from djitellopy import Tello, tello
 import time
 

@@ -1,3 +1,5 @@
+# Author: Sina Steinmüller
+
 import sys
 from PyQt5.QtWidgets import (
     QApplication,

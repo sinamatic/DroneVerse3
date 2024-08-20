@@ -1,5 +1,5 @@
-# Sina Steinmüller
-# Stand: 2024-06-30
+# Author: Sina Steinmüller
+
 """
 This program reads the gyroscope values from the OSC server and calculates the direction of the movement based on the average values of the last 500 values.
 """

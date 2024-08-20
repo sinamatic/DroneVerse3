@@ -1,5 +1,4 @@
-# Sina Steinmüller
-# Stand: 2024-06-30
+# Author: Sina Steinmüller
 
 import logging
 import time

@@ -6,3 +6,5 @@ djitellopy
 pyqt5
 screeninfo
 serial
+threading
+telnetlib

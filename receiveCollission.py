@@ -1,5 +1,4 @@
-# Lisa Berbig
-# Stand: 2024-06-30
+# Author: Lisa Berbig
 
 from pythonosc.dispatcher import Dispatcher
 from pythonosc.osc_server import BlockingOSCUDPServer

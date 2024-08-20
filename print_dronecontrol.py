@@ -1,5 +1,5 @@
-# Sina Steinmüller
-# Stand: 2024-06-30
+# Author: Sina Steinmüller
+
 """ 
 This program provides a simple print-based drone controller for demonstration purposes.
 

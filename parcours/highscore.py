@@ -1,3 +1,4 @@
+# Author: Anusha Kanagarasa
 import tkinter as tk
 from tkinter import PhotoImage
 import serial
