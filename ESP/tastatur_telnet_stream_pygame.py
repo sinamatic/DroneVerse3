@@ -1,40 +1,39 @@
 # Author: Tobias Schwarz
+#Stand: 20.08.2024
 
-import telnetlib
 # import keyboard
-import threading
 # import time
+import telnetlib
+import threading
 import pygame
 
-# Konfiguration
-# 192.168.50.131
-HOST = "192.168.50.33"  # Ersetze dies mit der Adresse deines Telnet-Servers
-PORT = 23  # Standard-Telnet-Port, ändere dies entsprechend deiner Konfiguration
+# 192.168.50.131 old IP Adresss
+HOST = "192.168.50.33"  # Adresse des Telnet-Servers
+PORT = 23  # Standard-Telnet-Port
 tn = telnetlib.Telnet(HOST, PORT) # Verbindung zum Telnet-Server herstellen
 
 if not telnetlib.Telnet: print("Telnet-Verbindung konnte nicht hergestellt werden.")
 
 # <pygame> _____________________________________________________________
 
-
 pygame.init()
 pygame.display.init()
 pygame.display.set_mode((400, 600))
 clock = pygame.time.Clock()
-
-
 
 run = True
 while run:
     clock.tick(1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            # Wenn Fenster geschlossen
             run = False
-            tn.close() # Schließe die Telnet-Verbindung 
+            tn.close()
             print("Telnet-Verbindung geschlossen. Programm beendet.")
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN:
+            # Wenn Taste gedrückt
             # print(event)
             if event.key == pygame.K_a:
                 print("left")
@@ -49,14 +48,9 @@ while run:
                 print("up")
                 tn.write("s".encode('ascii') + b"\n") 
         elif event.type == pygame.KEYUP:
+            # Wenn Taste losgelassen
             tn.write("x".encode('ascii') + b"\n") 
             print("stop")
-
-
-# variable wird im loop immmer größer und ab bestimmten wert wird erst wieder abgefragt
-
-
-
 
 # </pygame>______________________________________________________________
 
@@ -66,7 +60,7 @@ def write(char):
 def listen_to_server():
     while True:
         try:
-            # Lies die Nachricht vom Server
+            # Liest Nachrichten vom Server
             message = tn.read_very_eager()
             if message:
                 print(">>> Nachricht vom Server:", message.decode('ascii'))
@@ -74,7 +68,7 @@ def listen_to_server():
             print(f"Fehler beim Empfangen der Nachricht: {e}")
             break
 
-# Starte den Listener in einem separaten Thread
+# Startet Listener in separatem Thread
 thread = threading.Thread(target=listen_to_server)
-thread.daemon = True  # Damit der Thread beendet wird, wenn das Hauptprogramm beendet wird
+thread.daemon = True
 thread.start()
