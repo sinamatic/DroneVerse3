@@ -13,12 +13,12 @@ Needs to be updated, not tested yet.
 import time
 import telnetlib
 
-HOST = "192.168.43.133"  # Adresse des Telnet-Servers
-PORT = 23  # Standard-Telnet-Port
-print("Connecting to Telnet server...")
-tn = telnetlib.Telnet(HOST, PORT)  # Verbindung zum Telnet-Server herstellen
-if not telnetlib.Telnet:
-    print("Telnet-Verbindung konnte nicht hergestellt werden.")
+# HOST = "192.168.43.133"  # Adresse des Telnet-Servers
+# PORT = 23  # Standard-Telnet-Port
+# print("Connecting to Telnet server...")
+# tn = telnetlib.Telnet(HOST, PORT)  # Verbindung zum Telnet-Server herstellen
+# if not telnetlib.Telnet:
+#     print("Telnet-Verbindung konnte nicht hergestellt werden.")
 
 
 class QuadcopterDroneController:

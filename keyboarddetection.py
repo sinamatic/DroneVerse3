@@ -6,16 +6,6 @@ This program uses Pygame to detect keyboard input and control the drone based on
 import pygame
 import sys
 
-keys_pressed = {
-    "up": False,
-    "down": False,
-    "left": False,
-    "right": False,
-    "takeoff": False,
-    "forward": False,
-    "backward": False,
-}
-
 
 def run_keyboard_detection(direction_callback):
     pygame.init()
@@ -35,29 +25,49 @@ def run_keyboard_detection(direction_callback):
     running = True
     direction = "none"
 
+    keys_pressed = {
+        "up": False,
+        "down": False,
+        "left": False,
+        "right": False,
+        "takeoff": False,
+        "forward": False,
+        "backward": False,
+    }
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+            # KeyDown-Events zur Richtungsbestimmung
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     keys_pressed["forward"] = True
+                    direction = "forward"
                 elif event.key == pygame.K_s:
                     keys_pressed["backward"] = True
+                    direction = "backward"
                 elif event.key == pygame.K_a:
                     keys_pressed["left"] = True
+                    direction = "left"
                 elif event.key == pygame.K_d:
                     keys_pressed["right"] = True
+                    direction = "right"
                 elif event.key == pygame.K_UP:
                     keys_pressed["up"] = True
+                    direction = "up"
                 elif event.key == pygame.K_DOWN:
                     keys_pressed["down"] = True
+                    direction = "down"
                 elif event.key == pygame.K_q:
                     running = False
-                    break
 
+                    break
+                direction_callback(direction)
+
+            # KeyUp-Events zum Stoppen der Drohne
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     keys_pressed["forward"] = False
@@ -77,23 +87,7 @@ def run_keyboard_detection(direction_callback):
                 elif event.key == pygame.K_DOWN:
                     keys_pressed["down"] = False
                     direction = "stop"
-
-        try:
-            if keys_pressed["up"]:
-                direction = "up"
-            if keys_pressed["down"]:
-                direction = "down"
-            if keys_pressed["left"]:
-                direction = "left"
-            if keys_pressed["right"]:
-                direction = "right"
-            if keys_pressed["forward"]:
-                direction = "forward"
-            if keys_pressed["backward"]:
-                direction = "backward"
-
-        except Exception as e:
-            print(f"Ein Fehler ist aufgetreten: {e}")
+                direction_callback(direction)
 
         screen.blit(background_image, (0, 0))
 

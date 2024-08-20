@@ -1,5 +1,7 @@
-// change this to platformio project or use arduino ide
-#include <Arduino.h>
+// Author: Katharina Hölzl
+
+// change this to platformio project for usage in vsc or use arduino ide
+// #include <Arduino.h>
 
 long duration;
 int distance;
